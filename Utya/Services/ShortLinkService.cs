@@ -18,6 +18,16 @@ public class ShortLinkService(
         CreateShortLinkRequest request,
         ApplicationUser? user = null)
     {
+        if (!string.IsNullOrEmpty(request.CustomAlias))
+        {
+            if (await context.ShortLinks.AnyAsync(s => s.CustomAlias == request.CustomAlias))
+            {
+                throw new ArgumentException("Этот алиас уже занят");
+            }
+            
+            // request.CustomAlias = request.CustomAlias.ToLowerInvariant();
+        }
+        
         var shortLink = new ShortLink
         {
             OriginalUrl = request.OriginalUrl,

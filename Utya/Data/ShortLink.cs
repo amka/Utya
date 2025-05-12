@@ -33,4 +33,6 @@ public class ShortLink
     // Navigation properties
     public List<Click> Clicks { get; } = new();
     // public List<GeoRedirect> GeoRedirects { get; } = new();
+    
+    public bool IsExpired => ExpiresAt < DateTime.UtcNow;
 }
