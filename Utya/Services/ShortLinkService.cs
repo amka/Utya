@@ -68,7 +68,7 @@ public class ShortLinkService(
     {
         var click = new Click
         {
-            ShortLinkId = link.Id,
+            ShortLink = link,
             IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
             UserAgent = httpContext.Request.Headers.UserAgent,
             Referrer = httpContext.Request.Headers.Referer,
