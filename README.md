@@ -36,20 +36,25 @@
 - Docker (опционально)
 
 ### Установка
-```bash
-# 1. Клонировать репозиторий
-git clone https://github.com/tenderowl/utya.git
-cd utya
 
-# 2. Настроить окружение
-cp appsettings.Development.json appsettings.Production.json
-nano appsettings.Production.json  # Заполнить параметры
+#### 1. Клонировать репозиторий
 
-# 3. Установить зависимости
-dotnet restore
+    git clone https://github.com/tenderowl/utya.git
+    cd utya
 
-# 4. Запустить миграции
-dotnet ef --project Utya database mirate
+#### 2. Настроить окружение
 
-# 5. Запустить сервер
-dotnet run --project Utya
+    cp appsettings.Development.json appsettings.Production.json
+    nano appsettings.Production.json  # Заполнить параметры
+
+#### 3. Установить зависимости
+
+    dotnet restore
+
+#### 4. Запустить миграции
+
+    dotnet ef --project Utya database migrate
+
+#### 5. Запустить сервер
+
+    dotnet run --project Utya

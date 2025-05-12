@@ -2,6 +2,405 @@
 
 <PageTitle>Home</PageTitle>
 
-<h1>Hello, world!</h1>
+<!-- Hero Section -->
+<section class="hero-gradient text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+        <h1 class="text-4xl md:text-6xl font-bold mb-6">Укорачивайте ссылки с Gusya</h1>
+        <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto">Самый быстрый и надежный сервис сокращения ссылок. Как
+            гусь летит прямо к цели!</p>
 
-Welcome to your new app.
+        <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-2 shadow-lg">
+            <div class="flex flex-col md:flex-row">
+                <input type="text" placeholder="Вставьте длинную ссылку здесь..."
+                       class="url-input w-full flex-grow px-4 py-3 rounded-lg input input-lg text-base-content">
+                <button class="mt-2 md:mt-0 md:ml-2 px-6 py-3 rounded-lg btn btn-lg btn-warning hero-gradient">
+                    <span class="loading loading-spinner hidden transition"></span>
+                    Укоротить
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-8 flex justify-center space-x-4">
+            <div class="flex items-center">
+                <i class="fas fa-bolt text-amber-200 mr-2"></i>
+                <span>Мгновенное создание</span>
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-shield-alt text-amber-200 mr-2"></i>
+                <span>Безопасные ссылки</span>
+            </div>
+            <div class="flex items-center">
+                <i class="fas fa-chart-line text-amber-200 mr-2"></i>
+                <span>Аналитика</span>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<!-- Features Section -->
+<section id="features" class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">Почему выбирают Gusya?</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Наши уникальные возможности помогут
+                вам эффективно управлять вашими ссылками</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
+                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                    <i class="fas fa-rocket text-amber-500 dark:text-amber-400 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Молниеносная скорость</h3>
+                <p class="text-gray-600 dark:text-gray-300">Наши серверы работают настолько быстро, что даже гусь
+                    позавидует. Создавайте ссылки за доли секунды.</p>
+            </div>
+
+            <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
+                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                    <i class="fas fa-lock text-amber-500 dark:text-amber-400 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Защита ссылок</h3>
+                <p class="text-gray-600 dark:text-gray-300">Защитите свои ссылки паролем, установите срок действия или
+                    ограничьте количество переходов.</p>
+            </div>
+
+            <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
+                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                    <i class="fas fa-chart-pie text-amber-500 dark:text-amber-400 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Детальная аналитика</h3>
+                <p class="text-gray-600 dark:text-gray-300">Получайте подробные отчеты о кликах, географии переходов,
+                    устройствах и браузерах ваших посетителей.</p>
+            </div>
+
+            <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
+                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                    <i class="fas fa-link text-amber-500 dark:text-amber-400 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Кастомные домены</h3>
+                <p class="text-gray-600 dark:text-gray-300">Используйте собственный домен для укороченных ссылок, чтобы
+                    усилить ваш бренд.</p>
+            </div>
+
+            <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
+                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                    <i class="fas fa-qrcode text-amber-500 dark:text-amber-400 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">QR-коды</h3>
+                <p class="text-gray-600 dark:text-gray-300">Создавайте QR-коды для ваших ссылок и используйте их в
+                    печатных материалах.</p>
+            </div>
+
+            <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
+                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                    <i class="fas fa-users text-amber-500 dark:text-amber-400 text-xl"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Командная работа</h3>
+                <p class="text-gray-600 dark:text-gray-300">Работайте вместе с коллегами, управляйте доступом и
+                    распределяйте роли в команде.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">Как это работает?</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Всего три простых шага до короткой
+                ссылки</p>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center max-w-5xl mx-auto">
+            <div class="flex flex-col items-center mb-10 md:mb-0">
+                <div class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
+                    1
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Вставьте ссылку</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-center max-w-xs">Скопируйте вашу длинную ссылку и
+                    вставьте в поле выше</p>
+            </div>
+
+            <div class="hidden md:block">
+                <i class="fas fa-arrow-right text-3xl text-amber-500 mx-8"></i>
+            </div>
+            <div class="md:hidden my-4">
+                <i class="fas fa-arrow-down text-3xl text-amber-500"></i>
+            </div>
+
+            <div class="flex flex-col items-center mb-10 md:mb-0">
+                <div class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
+                    2
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Настройте (опционально)</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-center max-w-xs">Добавьте псевдоним, пароль или срок
+                    действия</p>
+            </div>
+
+            <div class="hidden md:block">
+                <i class="fas fa-arrow-right text-3xl text-amber-500 mx-8"></i>
+            </div>
+            <div class="md:hidden my-4">
+                <i class="fas fa-arrow-down text-3xl text-amber-500"></i>
+            </div>
+
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
+                    3
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Получите короткую ссылку</h3>
+                <p class="text-gray-600 dark:text-gray-300 text-center max-w-xs">Копируйте и делитесь вашей новой
+                    короткой ссылкой</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing" class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">Наши тарифы</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Выберите план, который подходит именно
+                вам</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-8 hover:border-amber-400 dark:hover:border-amber-400 transition">
+                <h3 class="text-xl font-semibold mb-4">Бесплатный</h3>
+                <div class="mb-6">
+                    <span class="text-4xl font-bold">0₽</span>
+                    <span class="text-gray-600 dark:text-gray-300">/месяц</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>До 100 ссылок в месяц</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>Базовая аналитика</span>
+                    </li>
+                    <li class="flex items-center text-gray-400">
+                        <i class="fas fa-times text-gray-400 mr-2"></i>
+                        <span>Кастомные домены</span>
+                    </li>
+                    <li class="flex items-center text-gray-400">
+                        <i class="fas fa-times text-gray-400 mr-2"></i>
+                        <span>Защита ссылок</span>
+                    </li>
+                </ul>
+                <button class="w-full py-3 rounded-lg border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition">
+                    Начать
+                </button>
+            </div>
+
+            <div class="border-2 border-amber-400 dark:border-amber-400 rounded-xl p-8 bg-gradient-to-b from-amber-50 to-white dark:from-amber-900/20 dark:to-gray-800 relative">
+                <div class="absolute top-0 right-0 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
+                    Популярный
+                </div>
+                <h3 class="text-xl font-semibold mb-4">Профессиональный</h3>
+                <div class="mb-6">
+                    <span class="text-4xl font-bold">499₽</span>
+                    <span class="text-gray-600 dark:text-gray-300">/месяц</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>До 5000 ссылок в месяц</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>Расширенная аналитика</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>1 кастомный домен</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>Защита ссылок</span>
+                    </li>
+                </ul>
+                <button class="w-full py-3 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:from-amber-500 hover:to-orange-600 transition">
+                    Попробовать
+                </button>
+            </div>
+
+            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-8 hover:border-amber-400 dark:hover:border-amber-400 transition">
+                <h3 class="text-xl font-semibold mb-4">Бизнес</h3>
+                <div class="mb-6">
+                    <span class="text-4xl font-bold">1499₽</span>
+                    <span class="text-gray-600 dark:text-gray-300">/месяц</span>
+                </div>
+                <ul class="space-y-3 mb-8">
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>Неограниченное количество ссылок</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>Полная аналитика</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>До 5 кастомных доменов</span>
+                    </li>
+                    <li class="flex items-center">
+                        <i class="fas fa-check text-amber-500 mr-2"></i>
+                        <span>Приоритетная поддержка</span>
+                    </li>
+                </ul>
+                <button class="w-full py-3 rounded-lg border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition">
+                    Начать
+                </button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonials -->
+<section class="py-20">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">Что говорят наши пользователи</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Тысячи довольных клиентов по всему
+                миру</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
+                        <span class="text-amber-500 dark:text-amber-400 font-bold">АИ</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Алексей Иванов</h4>
+                        <p class="text-sm text-gray-500">Маркетолог</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300">"Использую Gusya для всех наших маркетинговых кампаний.
+                    Аналитика просто потрясающая, помогает оптимизировать бюджеты!"</p>
+                <div class="mt-4 text-amber-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
+                        <span class="text-amber-500 dark:text-amber-400 font-bold">ЕС</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Елена Смирнова</h4>
+                        <p class="text-sm text-gray-500">Блогер</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300">"Лучший сервис сокращения ссылок, который я пробовала.
+                    Особенно нравится возможность создавать QR-коды для моих печатных материалов."</p>
+                <div class="mt-4 text-amber-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">
+                <div class="flex items-center mb-4">
+                    <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
+                        <span class="text-amber-500 dark:text-amber-400 font-bold">ДК</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Дмитрий Кузнецов</h4>
+                        <p class="text-sm text-gray-500">Разработчик</p>
+                    </div>
+                </div>
+                <p class="text-gray-600 dark:text-gray-300">"API Gusya легко интегрировался в нашу систему. Теперь все
+                    наши внутренние ссылки автоматически укорачиваются через Gusya."</p>
+                <div class="mt-4 text-amber-400">
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star"></i>
+                    <i class="fas fa-star-half-alt"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FAQ -->
+<section id="faq" class="py-20 ">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-bold mb-4">Часто задаваемые вопросы</h2>
+            <p class="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">Ответы на самые популярные вопросы о
+                Gusya</p>
+        </div>
+
+        <div class="max-w-3xl mx-auto">
+
+            <div tabindex="0" class="collapse collapse-plus mb-6 bg-base-100 border-base-300 border">
+                <div class="collapse-title font-semibold">Как работает сервис Gusya?</div>
+                <div class="collapse-content faq-content text-base-content">
+                    <p>Gusya принимает вашу длинную URL-ссылку и создает короткий, удобный для использования вариант.
+                        Когда кто-то переходит по короткой ссылке, наш сервер перенаправляет их на исходный длинный URL.
+                        Это происходит мгновенно и незаметно для пользователя.</p>
+                </div>
+            </div>
+
+            <div tabindex="0" class="collapse collapse-plus mb-6 bg-base-100 border-base-300 border">
+                <div class="collapse-title font-semibold">Есть ли ограничение на количество ссылок?</div>
+                <div class="collapse-content faq-content text-base-content">
+                    <p>В бесплатном тарифе вы можете создавать до 100 ссылок в месяц. В профессиональном тарифе - до
+                        5000 ссылок, а в бизнес-тарифе количество ссылок не ограничено.</p>
+                </div>
+            </div>
+
+            <div tabindex="0" class="collapse collapse-plus mb-6 bg-base-100 border-base-300 border">
+                <div class="collapse-title font-semibold">Можно ли использовать собственный домен?</div>
+
+                <div class="collapse-content faq-content text-base-content">
+                    <p>Да, в профессиональном и бизнес-тарифах вы можете подключить собственный домен. В
+                        профессиональном тарифе доступен 1 кастомный домен, в бизнес-тарифе - до 5 доменов.</p>
+                </div>
+            </div>
+
+            <div tabindex="0" class="collapse collapse-plus mb-6 bg-base-100 border-base-300 border">
+                <div class="collapse-title font-semibold">Как долго хранятся мои ссылки?</div>
+                <div class="collapse-content faq-content text-base-content">
+                    <p>По умолчанию ваши ссылки хранятся бессрочно. Однако вы можете установить срок действия для каждой
+                        ссылки в настройках. После истечения срока ссылка перестанет работать.</p>
+                </div>
+            </div>
+
+            <div tabindex="0" class="collapse collapse-plus mb-6 bg-base-100 border-base-300 border">
+                <div class="collapse-title font-semibold">Есть ли API для разработчиков?</div>
+                <div class="collapse-content faq-content text-base-content">
+                    <p>Да, Gusya предоставляет полноценное REST API для интеграции с вашими приложениями. API доступен
+                        для всех платных тарифов. Документация доступна после регистрации.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="py-20 bg-gradient-to-r from-amber-400 to-orange-500 text-white">
+    <div class="container mx-auto px-4 text-center">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">Готовы начать использовать Gusya?</h2>
+        <p class="text-xl mb-10 max-w-2xl mx-auto">Присоединяйтесь к тысячам довольных пользователей уже сегодня</p>
+        <button class="px-8 py-4 rounded-lg btn btn-lg font-bold bg-white text-amber-500 hover:bg-gray-100 transition shadow-lg">
+            Зарегистрироваться бесплатно
+        </button>
+    </div>
+</section>

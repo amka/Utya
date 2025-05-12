@@ -1,0 +1,81 @@
+﻿@implements IDisposable
+
+@inject NavigationManager NavigationManager
+
+<header class="container mx-auto px-4 py-6 flex justify-between items-center">
+    <div class="flex items-center">
+        <!--    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center mr-3">-->
+        <!--      <i class="fas fa-feather text-white text-xl">🪿</i>-->
+        <!--    </div>-->
+        <div class="w-10 h-10 rounded-full from-amber-400 to-orange-500 flex items-center justify-center mr-3">
+            <NavLink class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500" href="" Match="NavLinkMatch.All">
+                <i class="text-xl">🪿</i>
+            </NavLink>
+        </div>
+        <h1 class="text-2xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500">
+            <a href="/" data-turbo-action="replace">Gusya</a>
+        </h1>
+    </div>
+
+    <nav class="hidden md:flex space-x-8">
+        <NavLink class="font-medium hover:text-amber-500 dark:hover:text-amber-400 transition" href="counter">Возможности</NavLink>
+        <NavLink class="font-medium hover:text-amber-500 dark:hover:text-amber-400 transition" href="weather">Тарифы</NavLink>
+        <NavLink class="font-medium hover:text-amber-500 dark:hover:text-amber-400 transition" href="fetch-data">FAQ</NavLink>
+        <NavLink class="font-medium hover:text-amber-500 dark:hover:text-amber-400 transition" href="/#contacts">Контакты</NavLink>
+    </nav>
+
+    <div class="flex items-center space-x-4">
+        <AuthorizeView>
+            <Authorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Account/Manage">
+                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
+                    </NavLink>
+                </div>
+                <div class="nav-item px-3">
+                    <form action="Account/Logout" method="post">
+                        <AntiforgeryToken/>
+                        <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
+                        <button type="submit" class="nav-link">
+                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                        </button>
+                    </form>
+                </div>
+            </Authorized>
+            <NotAuthorized>
+                <div class="nav-item px-3">
+                    <NavLink class="nav-link" href="Account/Register">
+                        <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register
+                    </NavLink>
+                </div>
+                <div class="md:block px-4 py-2 rounded-lg font-medium bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:from-amber-500 hover:to-orange-600 transition">
+                    <NavLink href="Account/Login">
+                        <span class="bi bi-person-badge-nav-menu" aria-hidden="true"></span> Login
+                    </NavLink>
+                </div>
+            </NotAuthorized>
+        </AuthorizeView>
+    </div>
+</header>
+
+@code {
+    private string? currentUrl;
+
+    protected override void OnInitialized()
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        NavigationManager.LocationChanged += OnLocationChanged;
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        StateHasChanged();
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}
+
