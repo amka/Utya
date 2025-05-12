@@ -83,13 +83,14 @@ public class ShortLinkService(
 
     public async Task RecordClick(ShortLink link, HttpContext httpContext)
     {
+        var ipAddress = httpContext.Connection.RemoteIpAddress?.ToString();
         var click = new Click
         {
             ShortLink = link,
-            IpAddress = httpContext.Connection.RemoteIpAddress?.ToString(),
+            IpAddress = ipAddress,
             UserAgent = httpContext.Request.Headers.UserAgent,
             Referrer = httpContext.Request.Headers.Referer,
-            CountryCode = await geoLocator.GetCountryCode(httpContext)
+            CountryCode = await geoLocator.GetCountryCode(ipAddress)
         };
 
         await context.Clicks.AddAsync(click);

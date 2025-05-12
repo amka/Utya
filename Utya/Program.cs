@@ -47,8 +47,11 @@ builder.Services.AddScoped<ShortLinkService>();
 builder.Services.AddSingleton<IGeoLocator, GeoIpService>();
 builder.Services.AddSingleton<IPasswordHasher<ShortLink>, PasswordHasher<ShortLink>>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IClickProcessor, ClickProcessor>();
+builder.Services.AddHostedService(s => s.GetService<IClickProcessor>()!);
 
 builder.Services.AddControllers();
+
 
 var app = builder.Build();
 

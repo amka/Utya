@@ -1,3 +1,5 @@
+using System.Net;
+
 namespace Utya.Services;
 
 public class GeoIpService : IGeoLocator
@@ -11,13 +13,11 @@ public class GeoIpService : IGeoLocator
         _logger = logger;
     }
 
-    public async Task<string?> GetCountryCode(HttpContext context)
+    public async Task<string?> GetCountryCode(string? ip)
     {
         try
         {
-            var ip = context.Connection.RemoteIpAddress?.ToString();
-
-            if (string.IsNullOrEmpty(ip) || ip == "::1")
+            if (string.IsNullOrEmpty(ip) || ip == "::1" || ip == "127.0.0.1")
                 return "RU"; // Для localhost
 
             var response = await _httpClient.GetFromJsonAsync<GeoIpResponse>(

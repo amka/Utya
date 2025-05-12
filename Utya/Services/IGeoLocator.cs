@@ -2,5 +2,5 @@ namespace Utya.Services;
 
 public interface IGeoLocator
 {
-    Task<string?> GetCountryCode(HttpContext context);
+    Task<string?> GetCountryCode(string? ip);
 }

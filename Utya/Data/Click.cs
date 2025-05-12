@@ -21,5 +21,6 @@ public class Click
     public string? CountryCode { get; set; }
     
     // Foreign keys
+    public Guid? ShortLinkId { get; set; } = null;
     public ShortLink ShortLink { get; set; } = null!;
 }
