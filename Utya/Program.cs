@@ -5,6 +5,7 @@ using Utya.Client.Pages;
 using Utya.Components;
 using Utya.Components.Account;
 using Utya.Data;
+using Utya.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,6 +37,15 @@ builder.Services.AddIdentityCore<ApplicationUser>(options => options.SignIn.Requ
     .AddSignInManager()
     .AddDefaultTokenProviders();
 
+builder.Services.AddHttpClient<GeoIpService>(client => 
+{
+    client.BaseAddress = new Uri("http://ip-api.com/");
+    client.DefaultRequestHeaders.Add("User-Agent", "ShortLinker/1.0");
+});
+
+builder.Services.AddScoped<ShortLinkService>();
+builder.Services.AddSingleton<IGeoLocator, GeoIpService>();
+builder.Services.AddSingleton<IPasswordHasher<ShortLink>, PasswordHasher<ShortLink>>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
 var app = builder.Build();
