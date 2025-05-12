@@ -48,6 +48,8 @@ builder.Services.AddSingleton<IGeoLocator, GeoIpService>();
 builder.Services.AddSingleton<IPasswordHasher<ShortLink>, PasswordHasher<ShortLink>>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
 
+builder.Services.AddControllers();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -65,9 +67,9 @@ else
 
 app.UseHttpsRedirection();
 
-
 app.UseAntiforgery();
 
+app.MapControllers();
 app.MapStaticAssets();
 app.MapRazorComponents<App>()
     .AddInteractiveServerRenderMode()

@@ -1,7 +1,7 @@
 namespace Utya.Models;
 
-public record ShortLinkResponse(
-    String Id,
+public record CreateShortLinkResponse(
+    Guid Id,
     string ShortUrl,
     string OriginalUrl,
     DateTime CreatedAt,

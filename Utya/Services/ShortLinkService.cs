@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -13,7 +14,7 @@ public class ShortLinkService(
     IGeoLocator geoLocator,
     ILogger<ShortLinkService> logger)
 {
-    public async Task<ShortLink> CreateShortLink(
+    public async Task<ShortLink> CreateShortLinkAsync(
         CreateShortLinkRequest request,
         ApplicationUser? user = null)
     {
@@ -36,6 +37,22 @@ public class ShortLinkService(
         await context.SaveChangesAsync();
 
         return shortLink;
+    }
+
+    public async Task<ShortLink?> GetLinkAsync(Guid id)
+    {
+        return await context.ShortLinks
+            .Include(s => s.Clicks)
+            .FirstOrDefaultAsync(s => s.Id == id);
+    }
+
+    public async Task<ApplicationUser?> GetCurrentUserAsync(ClaimsPrincipal principal)
+    {
+        var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        if (userId == null || !Guid.TryParse(userId, out var guid))
+            return null;
+
+        return await context.Users.FindAsync(guid);
     }
 
     private async Task<string> GenerateUniqueCode(int length = 6)
