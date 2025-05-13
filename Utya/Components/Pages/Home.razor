@@ -1,4 +1,13 @@
 ﻿@page "/"
+@using System.ComponentModel.DataAnnotations
+@using Utya.Models
+
+@rendermode InteractiveServer
+
+@inject NavigationManager NavigationManager
+@inject ILogger<Home> Logger
+@inject HttpClient HttpClient
+@inject IJSRuntime JSRuntime
 
 <PageTitle>Home</PageTitle>
 
@@ -9,15 +18,58 @@
         <p class="text-xl md:text-2xl mb-10 max-w-3xl mx-auto">Самый быстрый и надежный сервис сокращения ссылок. Как
             гусь летит прямо к цели!</p>
 
-        <div class="max-w-2xl mx-auto bg-white dark:bg-gray-800 rounded-xl p-2 shadow-lg">
-            <div class="flex flex-col md:flex-row">
-                <input type="text" placeholder="Вставьте длинную ссылку здесь..."
-                       class="url-input w-full flex-grow px-4 py-3 rounded-lg input input-lg text-base-content">
-                <button class="mt-2 md:mt-0 md:ml-2 px-6 py-3 rounded-lg btn btn-lg btn-warning hero-gradient">
-                    <span class="loading loading-spinner hidden transition"></span>
-                    Укоротить
-                </button>
-            </div>
+
+        <div class="max-w-2xl mx-auto bg-white rounded-xl p-2 shadow-lg">
+            <EditForm Enhance Model="Model" OnValidSubmit="OnSubmit" FormName="ShortlinkForm">
+                <div class="flex flex-col md:flex-row">
+                    <InputText @bind-Value="Model!.Url" type="text"
+                               autofocus
+                               placeholder="Вставьте длинную ссылку здесь..."
+                               class="w-full flex-grow px-4 py-3 rounded-lg input input-lg text-base-content"/>
+                    <button class="mt-2 md:mt-0 md:ml-2 px-6 py-3 rounded-lg btn btn-lg btn-primary"
+                            type="submit" disabled="@(Loading || ResultModel?.OriginalUrl == Model?.Url)">
+                        <span class="@(Loading ? "hidden transition" : "transition")">
+                            <span class="loading loading-spinner "></span>
+                        </span>
+                        Укоротить
+                    </button>
+                </div>
+                <div class="text-warning-content list">
+                    <DataAnnotationsValidator/>
+                    <ValidationSummary/>
+                </div>
+            </EditForm>
+
+            @if (ResultModel != null)
+            {
+                <div class="@(ResultModel == null ? "collapse collapse-close" : "collapse collapse-open")">
+                    <div id="resultBox" class="mt-4 collapse-content px-0">
+                        <div class="flex flex-col md:flex-row">
+                            <div class="url flex-grow text-start text-2xl align-between">
+                                <div class="text-primary-content ">
+                                    <a href="@ResultModel!.ShortUrl" target="_blank" class="font-bold transition">
+                                        <i class="fas fa-up-right-from-square mx-2"></i>
+                                        @ResultModel.ShortUrl.Substring("http://".Length)
+                                    </a>
+                                </div>
+                                <div class="flex items-center mt-2 flex-shrink">
+                                    <button @onclick="CopyToClipboard"
+                                            class="btn btn-default btn-lg rounded-lg w-full md:w-auto">
+                                        Копировать
+                                        @* <div class="text-neutral-300 kbd">ctrl+c</div> *@
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="avatar mt-2 md:mt-0">
+                                <div class="w-30 p-2 border border-base-300 rounded-lg w-full md:w-auto">
+                                    <img src="@ResultModel.QrCodeBase64" alt="@ResultModel.ShortUrl"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
         </div>
 
         <div class="mt-8 flex justify-center space-x-4">
@@ -49,7 +101,8 @@
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
-                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                <div
+                    class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
                     <i class="fas fa-rocket text-amber-500 dark:text-amber-400 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Молниеносная скорость</h3>
@@ -58,7 +111,8 @@
             </div>
 
             <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
-                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                <div
+                    class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
                     <i class="fas fa-lock text-amber-500 dark:text-amber-400 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Защита ссылок</h3>
@@ -67,7 +121,8 @@
             </div>
 
             <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
-                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                <div
+                    class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
                     <i class="fas fa-chart-pie text-amber-500 dark:text-amber-400 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Детальная аналитика</h3>
@@ -76,7 +131,8 @@
             </div>
 
             <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
-                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                <div
+                    class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
                     <i class="fas fa-link text-amber-500 dark:text-amber-400 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Кастомные домены</h3>
@@ -85,7 +141,8 @@
             </div>
 
             <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
-                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                <div
+                    class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
                     <i class="fas fa-qrcode text-amber-500 dark:text-amber-400 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold mb-3">QR-коды</h3>
@@ -94,7 +151,8 @@
             </div>
 
             <div class="feature-card  bg-base-200 text-base-content p-8 rounded-xl transition duration-300">
-                <div class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
+                <div
+                    class="w-14 h-14 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mb-6">
                     <i class="fas fa-users text-amber-500 dark:text-amber-400 text-xl"></i>
                 </div>
                 <h3 class="text-xl font-semibold mb-3">Командная работа</h3>
@@ -116,7 +174,8 @@
 
         <div class="flex flex-col md:flex-row justify-between items-center max-w-5xl mx-auto">
             <div class="flex flex-col items-center mb-10 md:mb-0">
-                <div class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
+                <div
+                    class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
                     1
                 </div>
                 <h3 class="text-xl font-semibold mb-2">Вставьте ссылку</h3>
@@ -132,7 +191,8 @@
             </div>
 
             <div class="flex flex-col items-center mb-10 md:mb-0">
-                <div class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
+                <div
+                    class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
                     2
                 </div>
                 <h3 class="text-xl font-semibold mb-2">Настройте (опционально)</h3>
@@ -148,7 +208,8 @@
             </div>
 
             <div class="flex flex-col items-center">
-                <div class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
+                <div
+                    class="w-16 h-16 rounded-full bg-amber-500 flex items-center justify-center text-white text-xl font-bold mb-4">
                     3
                 </div>
                 <h3 class="text-xl font-semibold mb-2">Получите короткую ссылку</h3>
@@ -169,7 +230,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-8 hover:border-amber-400 dark:hover:border-amber-400 transition">
+            <div
+                class="border border-gray-200 dark:border-gray-700 rounded-xl p-8 hover:border-amber-400 dark:hover:border-amber-400 transition">
                 <h3 class="text-xl font-semibold mb-4">Бесплатный</h3>
                 <div class="mb-6">
                     <span class="text-4xl font-bold">0₽</span>
@@ -193,13 +255,16 @@
                         <span>Защита ссылок</span>
                     </li>
                 </ul>
-                <button class="w-full py-3 rounded-lg border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition">
+                <button
+                    class="w-full py-3 rounded-lg border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition">
                     Начать
                 </button>
             </div>
 
-            <div class="border-2 border-amber-400 dark:border-amber-400 rounded-xl p-8 bg-gradient-to-b from-amber-50 to-white dark:from-amber-900/20 dark:to-gray-800 relative">
-                <div class="absolute top-0 right-0 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
+            <div
+                class="border-2 border-amber-400 dark:border-amber-400 rounded-xl p-8 bg-gradient-to-b from-amber-50 to-white dark:from-amber-900/20 dark:to-gray-800 relative">
+                <div
+                    class="absolute top-0 right-0 bg-amber-500 text-white text-xs font-bold px-3 py-1 rounded-bl-lg rounded-tr-lg">
                     Популярный
                 </div>
                 <h3 class="text-xl font-semibold mb-4">Профессиональный</h3>
@@ -225,12 +290,14 @@
                         <span>Защита ссылок</span>
                     </li>
                 </ul>
-                <button class="w-full py-3 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:from-amber-500 hover:to-orange-600 transition">
+                <button
+                    class="w-full py-3 rounded-lg bg-gradient-to-r from-amber-400 to-orange-500 text-white hover:from-amber-500 hover:to-orange-600 transition">
                     Попробовать
                 </button>
             </div>
 
-            <div class="border border-gray-200 dark:border-gray-700 rounded-xl p-8 hover:border-amber-400 dark:hover:border-amber-400 transition">
+            <div
+                class="border border-gray-200 dark:border-gray-700 rounded-xl p-8 hover:border-amber-400 dark:hover:border-amber-400 transition">
                 <h3 class="text-xl font-semibold mb-4">Бизнес</h3>
                 <div class="mb-6">
                     <span class="text-4xl font-bold">1499₽</span>
@@ -254,7 +321,8 @@
                         <span>Приоритетная поддержка</span>
                     </li>
                 </ul>
-                <button class="w-full py-3 rounded-lg border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition">
+                <button
+                    class="w-full py-3 rounded-lg border border-amber-500 text-amber-500 hover:bg-amber-500 hover:text-white transition">
                     Начать
                 </button>
             </div>
@@ -274,7 +342,8 @@
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
             <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">
                 <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
+                    <div
+                        class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
                         <span class="text-amber-500 dark:text-amber-400 font-bold">АИ</span>
                     </div>
                     <div>
@@ -295,7 +364,8 @@
 
             <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">
                 <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
+                    <div
+                        class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
                         <span class="text-amber-500 dark:text-amber-400 font-bold">ЕС</span>
                     </div>
                     <div>
@@ -316,7 +386,8 @@
 
             <div class="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-md">
                 <div class="flex items-center mb-4">
-                    <div class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
+                    <div
+                        class="w-12 h-12 rounded-full bg-amber-100 dark:bg-amber-900 flex items-center justify-center mr-4">
                         <span class="text-amber-500 dark:text-amber-400 font-bold">ДК</span>
                     </div>
                     <div>
@@ -399,8 +470,75 @@
     <div class="container mx-auto px-4 text-center">
         <h2 class="text-3xl md:text-4xl font-bold mb-6">Готовы начать использовать Gusya?</h2>
         <p class="text-xl mb-10 max-w-2xl mx-auto">Присоединяйтесь к тысячам довольных пользователей уже сегодня</p>
-        <button class="px-8 py-4 rounded-lg btn btn-lg font-bold bg-white text-amber-500 hover:bg-gray-100 transition shadow-lg">
+        <button
+            class="px-8 py-4 rounded-lg btn btn-lg font-bold bg-white text-amber-500 hover:bg-gray-100 transition shadow-lg">
             Зарегистрироваться бесплатно
         </button>
     </div>
 </section>
+
+@code {
+
+    public class ShortlinkFormModel
+    {
+        [Required]
+        [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Url(ErrorMessage = "{0} is not a valid URL")]
+        public string? Url { get; set; }
+    }
+
+    [SupplyParameterFromForm] private ShortlinkFormModel? Model { get; set; }
+    private CreateShortLinkResponse? ResultModel { get; set; }
+    private bool Loading { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Model = new ShortlinkFormModel();
+
+        HttpClient.BaseAddress = new Uri(NavigationManager.BaseUri);
+        if (NavigationManager.Uri.Contains("?test"))
+        {
+            ResultModel = new CreateShortLinkResponse(
+                Guid.Empty,
+                "http://localhost:5053/J92sad",
+                "http://localhost:5053/J92sad",
+                DateTime.Now,
+                0,
+                "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAuQAAALkAQAAAABv3x3IAAACYklEQVR4nO3asXHkMAwFUHag/rtUB3RgygBBccfBXWI+BDvjBfGg7A+1bv0/1t3odDqdTqfT6XQ6nU6n0+l0Op1Op9PpdDr9L+qt1vXz3fV9to1zT2M7RqfT6XQ6PX2/ReK7adm7QqfT6XT64XpGrsWMxluI5y6dTqfT6fR3fXSfrF4adDqdTqfTf6lfL92n6HQ6nU6nf9SXP8vL5DuH+MJ1Op1Op9PpPQ9ETdH94WMdo9PpdDr9eP2tAsl/FmRbdDqdTqefrMdPsw8SjbLsQ3TvUptOp9Pp9JP08f09Di0b29zo8wMUhU6n0+n04/XpP4tH5bP159oxcbcWD0Wn0+l0Oj2ZMf828OwZE+Xq/DTodDqdTj9ejxWR0CWri1Qepdei0+l0Ov1wPbI6p3Zck6f8Lt3lCJ1Op9PpJ+trQi/hPL2NLlldztHpdDqdfrKeszqfWN88X7uJZZZOp9Pp9FP1GBjc9pYba1uGey06nU6n04/Xp8AOJHYv+hPdv0ltOp1Op9MP0Usu5zvwthvwlPh0Op1Opx+vR+hup0ojupHas0en0+l0+ql6ni+pvXmj3Oai0+l0Op3+scLMax/p7a68vw3T6XQ6nX6S3mpd79Kydv2g0+l0Op1e56eLcG7dGS6H53N0Op1Opx+tv6Vx4fLHVEu60+l0Op1Oz9II4vtnNLpTkmez0+l0Op1O36f2kKYVfb75Lg9Fp9PpdDq992XZ9PZ4eYBpbdlIp9PpdPrZeqnNbbgsi9lxZJfadDqdTqefpP/7otPpdDqdTqfT6XQ6nU6n0+l0Op1Op9Pp9D+kfwFEym4ohm3m1gAAAABJRU5ErkJggg=="
+            );
+        }
+    }
+
+    private async Task OnSubmit()
+    {
+        Logger.LogInformation("Id = {Id}", Model?.Url);
+        try
+        {
+            Loading = true;
+            Thread.Sleep(1500);
+            var response = await HttpClient.PostAsJsonAsync("api/v1/links", new CreateShortLinkRequest(Model!.Url!));
+            if (response.IsSuccessStatusCode)
+            {
+                ResultModel = await response.Content.ReadFromJsonAsync<CreateShortLinkResponse>();
+            }
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+
+    private async Task CopyToClipboard()
+    {
+        try
+        {
+            await JSRuntime.InvokeAsync<string>("navigator.clipboard.writeText", ResultModel?.ShortUrl);
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            throw;
+        }
+    }
+
+}

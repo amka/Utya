@@ -3,25 +3,33 @@ html, body {
 }
 
 .hero-gradient {
-    background: linear-gradient(135deg, #ffb347 0%, #ffcc33 100%);
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
 }
 
-.text-gradient {
-    color: transparent;
-    background: linear-gradient(to right, var(--color-amber-500) 0%, var(--color-orange-500) 100%);
-    background-clip: text;
-}
+/*.text-gradient {*/
+/*    color: transparent;*/
+/*    background: linear-gradient(to right, var(--color-amber-500) 0%, var(--color-orange-500) 100%);*/
+/*    background-clip: text;*/
+/*}*/
 
-[data-theme=dark] {
-    .hero-gradient {
-        background: linear-gradient(135deg, #ff8c00 0%, #e67e22 100%);
-    }
+/*[data-theme=dark] {*/
+/*    .hero-gradient {*/
+/*        background: linear-gradient(135deg, #ff8c00 0%, #e67e22 100%);*/
+/*    }*/
 
-    .text-gradient {
-        color: transparent;
-        background: linear-gradient(to right, var(--color-amber-500) 0%, var(--color-orange-500) 100%);
-        background-clip: text;
-    }
+/*    .text-gradient {*/
+/*        color: transparent;*/
+/*        background: linear-gradient(to right, var(--color-amber-500) 0%, var(--color-orange-500) 100%);*/
+/*        background-clip: text;*/
+/*    }*/
+/*}*/
+
+.validation-errors {
+    padding: var(--spacing);
+    list-style: initial;
+    padding-inline: unset;
+    text-align: start;
+    margin-left: 20px;
 }
 
 .blazor-error-boundary {
@@ -30,9 +38,9 @@ html, body {
     color: white;
 }
 
-    .blazor-error-boundary::after {
-        content: "An error has occurred."
-    }
+.blazor-error-boundary::after {
+    content: "An error has occurred."
+}
 
 .darker-border-checkbox.form-check-input {
     border-color: #929292;

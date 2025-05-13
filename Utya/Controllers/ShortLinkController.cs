@@ -1,3 +1,5 @@
+using System.Drawing;
+using System.Text;
 using QRCoder;
 using Utya.Models;
 using Utya.Services;
@@ -77,9 +79,9 @@ public class ShortLinkController : ControllerBase
         // Генерируем QR только в development
         using var qrGenerator = new QRCodeGenerator();
         var qrCodeData = qrGenerator.CreateQrCode(url, QRCodeGenerator.ECCLevel.Q);
-        var qrCode = new PngByteQRCode(qrCodeData);
-        var bytes = qrCode.GetGraphic(20);
-        return $"data:image/png;base64,{Convert.ToBase64String(bytes)}";
+        var qrCode = new SvgQRCode(qrCodeData);
+        var bytes = Encoding.UTF8.GetBytes(qrCode.GetGraphic(new Size(96, 96), false));
+        return $"data:image/svg+xml;base64,{Convert.ToBase64String(bytes)}";
     }
 
     [HttpGet("{id}")]
