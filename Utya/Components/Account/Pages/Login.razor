@@ -10,71 +10,76 @@
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
 
-<PageTitle>Log in</PageTitle>
+<PageTitle>Войти</PageTitle>
 
-<h1 class="text-5xl">Log in</h1>
-<div class="row">
-    <div class="col-lg-6">
-        <section>
-            <StatusMessage Message="@errorMessage" />
-            <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
-                <DataAnnotationsValidator />
-                <h2 class="text-3xl">Use a local account to log in.</h2>
-                <hr />
-                <ValidationSummary class="text-danger" role="alert" />
-                <div class="form-floating mb-3">
-                    <InputText @bind-Value="Input.Email" id="Input.Email" class="input" autocomplete="username" aria-required="true" placeholder="name@example.com" />
-                    <label for="Input.Email" class="form-label">Email</label>
-                    <ValidationMessage For="() => Input.Email" class="text-danger" />
-                </div>
-                <div class="form-floating mb-3">
-                    <InputText type="password" @bind-Value="Input.Password" id="Input.Password" class="input" autocomplete="current-password" aria-required="true" placeholder="password" />
-                    <label for="Input.Password" class="form-label">Password</label>
-                    <ValidationMessage For="() => Input.Password" class="text-danger" />
-                </div>
-                <div class="checkbox mb-3">
-                    <label class="form-label">
-                        <InputCheckbox @bind-Value="Input.RememberMe" class="darker-border-checkbox form-check-input" />
-                        Remember me
-                    </label>
-                </div>
-                <div>
-                    <button type="submit" class="w-100 btn btn-lg btn-primary rounded-lg">Log in</button>
-                </div>
-                <div>
-                    <p>
-                        <a href="Account/ForgotPassword">Forgot your password?</a>
-                    </p>
-                    <p>
-                        <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))">Register as a new user</a>
-                    </p>
-                    <p>
-                        <a href="Account/ResendEmailConfirmation">Resend email confirmation</a>
-                    </p>
-                </div>
-            </EditForm>
-        </section>
+<section>
+    <div class="container w-96 mx-auto px-4 max-w-xl">
+        <h1 class="text-5xl py-4 text-gradient">Войти</h1>
+
+        <div class="card card-dash bg-base-200 shadow-lg">
+            <div class="card-body">
+                <StatusMessage Message="@errorMessage"/>
+                <EditForm Model="Input" method="post" OnValidSubmit="LoginUser" FormName="login">
+                    <h2 class="card-title">Используйте свой аккаунт Utya</h2>
+                    <DataAnnotationsValidator/>
+
+                    <ValidationSummary class="text-danger" role="alert"/>
+                    <fieldset class="fieldset">
+                        <legend for="Input.Email" class="fieldset-legend">Email</legend>
+                        <InputText @bind-Value="Input.Email" id="Input.Email"
+                                   class="input w-full" autocomplete="username"
+                                   aria-required="true" placeholder="name@example.com"
+                                   autofocus/>
+                        <ValidationMessage For="() => Input.Email" class="text-danger"/>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend for="Input.Password" class="fieldset-legend">Пароль</legend>
+                        <InputText type="password" @bind-Value="Input.Password" id="Input.Password"
+                                   class="input w-full"
+                                   autocomplete="current-password" aria-required="true" placeholder="СекретныйПароль"/>
+                        <ValidationMessage For="() => Input.Password" class="text-danger"/>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <label class="label">
+                            <InputCheckbox @bind-Value="Input.RememberMe"
+                                           class="checkbox darker-border-checkbox form-check-input"/>
+                            Запомнить меня
+                        </label>
+                    </fieldset>
+
+                    <div class="mt-4">
+                        <div>
+                            <button type="submit" class="btn btn-block btn-lg btn-primary rounded-lg">Log in</button>
+                        </div>
+                        <div class="divider">ИЛИ</div>
+                        <div>
+                            <ExternalLoginPicker/>
+                        </div>
+                    </div>
+                </EditForm>
+            </div>
+        </div>
+        <div class="text-sm my-4">
+            <div class="flex flex-col gap-2 justify-end items-end">
+                <a href="Account/ForgotPassword" class="link">Забыли пароль?</a>
+                <a href="@(NavigationManager.GetUriWithQueryParameters("Account/Register", new Dictionary<string, object?> { ["ReturnUrl"] = ReturnUrl }))"
+                   class="link">Зарегистрироваться</a>
+            
+                <a href="Account/ResendEmailConfirmation"
+                   class="link">Подтвердить почту</a>
+            </div>
+        </div>
     </div>
-    <div class="col-lg-4 col-lg-offset-2">
-        <section>
-            <h3>Use another service to log in.</h3>
-            <hr />
-            <ExternalLoginPicker />
-        </section>
-    </div>
-</div>
+</section>
 
 @code {
     private string? errorMessage;
 
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
-    [SupplyParameterFromForm]
-    private InputModel Input { get; set; } = new();
+    [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
-    [SupplyParameterFromQuery]
-    private string? ReturnUrl { get; set; }
+    [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -114,15 +119,13 @@
 
     private sealed class InputModel
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; } = "";
+        [Required] [EmailAddress] public string Email { get; set; } = "";
 
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; } = "";
 
-        [Display(Name = "Remember me?")]
-        public bool RememberMe { get; set; }
+        [Display(Name = "Remember me?")] public bool RememberMe { get; set; }
     }
+
 }

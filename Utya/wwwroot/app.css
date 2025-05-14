@@ -5,6 +5,11 @@ html, body {
 .hero-gradient {
     background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
 }
+.text-gradient {
+    color: transparent;
+    background: linear-gradient(to right, var(--color-primary) 0%, var(--color-secondary) 100%);
+    background-clip: text;
+}
 
 /*.text-gradient {*/
 /*    color: transparent;*/
@@ -23,6 +28,11 @@ html, body {
 /*        background-clip: text;*/
 /*    }*/
 /*}*/
+
+.bg-slash {
+    background-image: repeating-linear-gradient(-45deg, var(--color-base-100), var(--color-base-100) 13px, var(--color-base-200) 13px, var(--color-base-200) 14px);
+    background-size: 40px 40px;
+}
 
 .blazored-toast {
     animation-duration: 300ms !important;
