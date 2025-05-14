@@ -48,42 +48,53 @@
                     <div id="resultBox" class="mt-4 collapse-content px-0">
                         <div class="flex flex-col md:flex-row">
                             <div class="flex flex-grow text-start text-2xl">
-                                <div class="flex flex-col justify-end ">
-                                    <div class="text-primary-content">
+                                <div class="flex flex-col justify-end w-full">
+                                    <div class="text-neutral my-4">
                                         <a href="@ResultModel!.ShortUrl" target="_blank" class="font-bold transition">
-                                            <i class="fas fa-up-right-from-square mx-2"></i>
+                                            <i class="fas fa-link mr text-base-300 text-xl"></i>
                                             @ResultModel.ShortUrl.Substring("http://".Length)
                                         </a>
                                     </div>
-                                    <div class="flex items-center mt-2 flex-shrink">
+                                    <div class="flex gap-2 flex-wrap mt-2">
                                         <button @onclick="CopyToClipboard"
-                                                class="btn btn-default btn-lg rounded-lg w-full md:w-auto">
+                                                class="btn btn-default btn-lg rounded-lg btn-block md:btn-wide">
                                             Копировать
                                             @* <div class="text-neutral-300 kbd">ctrl+c</div> *@
                                         </button>
-                                        <details class="dropdown">
-                                            <summary class="m-1 btn btn-default btn-lg rounded-lg">
-                                                <i class="fa-regular fa-share-from-square"></i>
-                                            </summary>
-                                            <ul class="menu dropdown-content bg-base-100 text-base-content rounded-box z-100 w-52 p-2 shadow-sm">
-                                                <li>
-                                                    <a target="_blank"
+                                        <button class="btn md:btn-square btn-block btn-lg rounded-lg"
+                                                onclick="share_modal.showModal()">
+                                            <i class="fa-regular fa-share-from-square"></i>
+                                            <span class="sm:hidden">Поделиться</span>
+                                        </button>
+                                        <dialog id="share_modal" class="modal modal-bottom sm:modal-middle">
+                                            <div class="modal-box text-base-content">
+                                                <form method="dialog">
+                                                    <button
+                                                        class="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕
+                                                    </button>
+                                                </form>
+                                                <h3 class="text-lg font-bold">Поделиться</h3>
+                                                <div class="mt-4">
+                                                    <a target="_blank" class="btn btn-soft btn-block my-2"
                                                        href="https://telegram.me/share/url?url=@(ResultModel.ShortUrl)">
                                                         <i
-                                                            class="fa-brands fa-telegram"></i> Telegram</a></li>
-                                                <li>
-                                                    <a target="_blank"
+                                                            class="fa-brands fa-telegram"></i> Telegram</a>
+
+                                                    <a target="_blank" class="btn btn-soft btn-block my-2"
                                                        href="https://vk.com/share.php?url=@(ResultModel.ShortUrl)">
                                                         <i
-                                                            class="fa-brands fa-vk"></i> ВКонтакте</a></li>
-                                                <li>
-                                                    <a target="_blank"
+                                                            class="fa-brands fa-vk"></i> ВКонтакте</a>
+
+                                                    <a target="_blank" class="btn btn-soft btn-block my-2"
                                                        href="https://connect.ok.ru/offer?url=@(ResultModel.ShortUrl)">
                                                         <i
                                                             class="fa-brands fa-odnoklassniki"></i> Одноклассники</a>
-                                                </li>
-                                            </ul>
-                                        </details>
+                                                </div>
+                                            </div>
+                                            <form method="dialog" class="modal-backdrop">
+                                                <button>close</button>
+                                            </form>
+                                        </dialog>
                                     </div>
                                 </div>
                             </div>
