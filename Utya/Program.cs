@@ -1,3 +1,4 @@
+using Blazored.Toast;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -50,6 +51,7 @@ builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSe
 builder.Services.AddSingleton<IClickProcessor, ClickProcessor>();
 builder.Services.AddHostedService(s => s.GetService<IClickProcessor>()!);
 
+builder.Services.AddBlazoredToast();
 builder.Services.AddControllers();
 
 

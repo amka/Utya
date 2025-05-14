@@ -1,5 +1,6 @@
 ﻿@page "/"
 @using System.ComponentModel.DataAnnotations
+@using Blazored.Toast.Configuration
 @using Utya.Models
 
 @rendermode InteractiveServer
@@ -8,8 +9,12 @@
 @inject ILogger<Home> Logger
 @inject HttpClient HttpClient
 @inject IJSRuntime JSRuntime
+@inject IToastService toastService
 
 <PageTitle>Home</PageTitle>
+
+<BlazoredToasts Position="ToastPosition.TopCenter" IconType="IconType.FontAwesome" 
+                SuccessClass="text-success" ErrorClass="text-error" DisableTimeout/>
 
 <!-- Hero Section -->
 <section class="hero-gradient text-white py-20">
@@ -19,7 +24,7 @@
             гусь летит прямо к цели!</p>
 
 
-        <div class="max-w-2xl mx-auto bg-white rounded-xl p-2 shadow-lg">
+        <div class="max-w-2xl mx-auto bg-white rounded-xl p-4 shadow-lg">
             <EditForm Enhance Model="Model" OnValidSubmit="OnSubmit" FormName="ShortlinkForm">
                 <div class="flex flex-col md:flex-row">
                     <InputText @bind-Value="Model!.Url" type="text"
@@ -571,10 +576,12 @@
         try
         {
             await JSRuntime.InvokeAsync<string>("navigator.clipboard.writeText", ResultModel?.ShortUrl);
+            toastService.ShowSuccess("Ссылка скопирована в буфер обмена");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
+            toastService.ShowError("Не удалось скопировать ссылку в буфер обмена");
             throw;
         }
     }

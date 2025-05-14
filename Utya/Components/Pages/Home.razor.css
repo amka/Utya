@@ -14,3 +14,10 @@
 [data-theme=dark] .url-input {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
 }
+
+.collapse {
+    overflow: unset;
+}
+#resultBox {
+    padding-bottom: 0;
+}

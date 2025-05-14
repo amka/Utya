@@ -24,6 +24,19 @@ html, body {
 /*    }*/
 /*}*/
 
+.blazored-toast {
+    animation-duration: 300ms !important;
+    border-radius: var(--radius-lg) !important;
+    width: auto !important;
+}
+.blazored-toast-success {
+    border-top-color: var(--color-success) !important;    
+}
+
+.blazored-toast-error {
+    border-top-color: var(--color-error) !important;
+}
+
 .validation-errors {
     padding: var(--spacing);
     list-style: initial;
