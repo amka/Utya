@@ -23,22 +23,24 @@
                     <h2 class="card-title">Используйте свой аккаунт Utya</h2>
                     <DataAnnotationsValidator/>
 
-                    <ValidationSummary class="text-danger" role="alert"/>
+                    <ValidationSummary class="text-warning" role="alert"/>
                     <fieldset class="fieldset">
                         <legend for="Input.Email" class="fieldset-legend">Email</legend>
                         <InputText @bind-Value="Input.Email" id="Input.Email"
                                    class="input w-full" autocomplete="username"
                                    aria-required="true" placeholder="name@example.com"
                                    autofocus/>
-                        <ValidationMessage For="() => Input.Email" class="text-danger"/>
+                        <ValidationMessage For="() => Input.Email" class="text-warning"/>
                     </fieldset>
+                    
                     <fieldset class="fieldset">
                         <legend for="Input.Password" class="fieldset-legend">Пароль</legend>
                         <InputText type="password" @bind-Value="Input.Password" id="Input.Password"
                                    class="input w-full"
                                    autocomplete="current-password" aria-required="true" placeholder="СекретныйПароль"/>
-                        <ValidationMessage For="() => Input.Password" class="text-danger"/>
+                        <ValidationMessage For="() => Input.Password" class="text-warning"/>
                     </fieldset>
+                    
                     <fieldset class="fieldset">
                         <label class="label">
                             <InputCheckbox @bind-Value="Input.RememberMe"
@@ -49,7 +51,7 @@
 
                     <div class="mt-4">
                         <div>
-                            <button type="submit" class="btn btn-block btn-lg btn-primary rounded-lg">Log in</button>
+                            <button type="submit" class="btn btn-block btn-lg btn-primary rounded-lg">Войти</button>
                         </div>
                         <div class="divider">ИЛИ</div>
                         <div>
