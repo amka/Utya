@@ -1,17 +1,20 @@
 ﻿@inherits LayoutComponentBase
 @layout Layout.MainLayout
 
-<h1>Manage your account</h1>
-
-<div>
-    <h2>Change your account settings</h2>
-    <hr />
-    <div class="row">
-        <div class="col-lg-3">
-            <ManageNavMenu />
-        </div>
-        <div class="col-lg-9">
-            @Body
-        </div>
+<section class="container py-8">
+    <div class="px-4">
+        <h1 class="text-3xl mb-4">Manage your account</h1>
+        <h2 class="text-xl">Change your account settings</h2>
+        <div class="divider" ></div>
+        
+            <div class="flex gap-2">
+                <div class="flex flex-col">
+                    <ManageNavMenu/>
+                </div>
+                <div class="flex flex-col">
+                    @Body
+                </div>
+            </div>
+        
     </div>
-</div>
+</section>

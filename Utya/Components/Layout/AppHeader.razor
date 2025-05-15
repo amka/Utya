@@ -2,8 +2,8 @@
 
 @inject NavigationManager NavigationManager
 
-<header class="container mx-auto px-4 py-6 flex justify-between items-center">
-    <div class="navbar">
+<header class="flex justify-between items-center sticky top-0 z-50 bg-base-100">
+    <div class="container navbar mx-auto px-4 py-2 ">
         <div class="navbar-start">
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
@@ -13,16 +13,16 @@
                     tabindex="0"
                     class="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
                     <li>
-                        <NavLink href="counter" class="hover:text-primary transition">Возможности</NavLink>
+                        <NavLink href="/#features" class="hover:text-primary transition">Возможности</NavLink>
                     </li>
                     <li>
-                        <NavLink href="weather" class="hover:text-primary transition">Тарифы</NavLink>
+                        <NavLink href="/#pricing" class="hover:text-primary transition">Тарифы</NavLink>
                     </li>
                     <li>
-                        <NavLink href="fetch-data" class="hover:text-primary transition">FAQ</NavLink>
+                        <NavLink href="/#faq" class="hover:text-primary transition">FAQ</NavLink>
                     </li>
                     <li>
-                        <NavLink href="/#contacts" class="hover:text-primary transition">Контакты</NavLink>
+                        <NavLink href="/contacts" class="hover:text-primary transition">Контакты</NavLink>
                     </li>
                 </ul>
             </div>
@@ -40,16 +40,16 @@
         <div class="navbar-center hidden lg:flex">
             <nav class="menu menu-horizontal">
                 <li>
-                    <NavLink href="counter" class="hover:text-primary transition">Возможности</NavLink>
+                    <NavLink href="/#features" class="hover:text-primary transition">Возможности</NavLink>
                 </li>
                 <li>
-                    <NavLink href="weather" class="hover:text-primary transition">Тарифы</NavLink>
+                    <NavLink href="/#pricing" class="hover:text-primary transition">Тарифы</NavLink>
                 </li>
                 <li>
-                    <NavLink href="fetch-data" class="hover:text-primary transition">FAQ</NavLink>
+                    <NavLink href="/#faq" class="hover:text-primary transition">FAQ</NavLink>
                 </li>
                 <li>
-                    <NavLink href="/#contacts" class="hover:text-primary transition">Контакты</NavLink>
+                    <NavLink href="/contacts" class="hover:text-primary transition">Контакты</NavLink>
                 </li>
             </nav>
         </div>
@@ -68,7 +68,7 @@
                             <AntiforgeryToken/>
                             <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
                             <button type="submit" class="nav-link">
-                                <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                                Выйти
                             </button>
                         </form>
                     </div>
