@@ -3,58 +3,90 @@
 @inject NavigationManager NavigationManager
 
 <header class="container mx-auto px-4 py-6 flex justify-between items-center">
-    <div class="flex items-center">
-        <!--    <div class="w-10 h-10 rounded-full bg-gradient-to-r from-amber-400 to-orange-500 flex items-center justify-center mr-3">-->
-        <!--      <i class="fas fa-feather text-white text-xl">🪿</i>-->
-        <!--    </div>-->
-        <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
-            <NavLink class="text-2xl font-bold text-gradient" href="" Match="NavLinkMatch.All">
-                <i class="text-xl">🪿</i>
-            </NavLink>
+    <div class="navbar">
+        <div class="navbar-start">
+            <div class="dropdown">
+                <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+                </div>
+                <ul
+                    tabindex="0"
+                    class="menu dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+                    <li>
+                        <NavLink href="counter" class="hover:text-primary transition">Возможности</NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="weather" class="hover:text-primary transition">Тарифы</NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="fetch-data" class="hover:text-primary transition">FAQ</NavLink>
+                    </li>
+                    <li>
+                        <NavLink href="/#contacts" class="hover:text-primary transition">Контакты</NavLink>
+                    </li>
+                </ul>
+            </div>
+            
+            <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                <NavLink class="text-2xl font-bold text-gradient" href="" Match="NavLinkMatch.All">
+                    <i class="text-xl">🪿</i>
+                </NavLink>
+            </div>
+            <h1 class="text-2xl font-bold text-gradient">
+                <a href="/" data-turbo-action="replace">Utya</a>
+            </h1>
         </div>
-        <h1 class="text-2xl font-bold text-gradient">
-            <a href="/" data-turbo-action="replace">Utya</a>
-        </h1>
-    </div>
 
-    <nav class="hidden md:flex space-x-8">
-        <NavLink class="font-medium hover:text-primary dark:hover:text-primary transition" href="counter">Возможности</NavLink>
-        <NavLink class="font-medium hover:text-primary dark:hover:text-primary transition" href="weather">Тарифы</NavLink>
-        <NavLink class="font-medium hover:text-primary dark:hover:text-primary transition" href="fetch-data">FAQ</NavLink>
-        <NavLink class="font-medium hover:text-primary dark:hover:text-primary transition" href="/#contacts">Контакты</NavLink>
-    </nav>
+        <div class="navbar-center hidden lg:flex">
+            <nav class="menu menu-horizontal">
+                <li>
+                    <NavLink href="counter" class="hover:text-primary transition">Возможности</NavLink>
+                </li>
+                <li>
+                    <NavLink href="weather" class="hover:text-primary transition">Тарифы</NavLink>
+                </li>
+                <li>
+                    <NavLink href="fetch-data" class="hover:text-primary transition">FAQ</NavLink>
+                </li>
+                <li>
+                    <NavLink href="/#contacts" class="hover:text-primary transition">Контакты</NavLink>
+                </li>
+            </nav>
+        </div>
 
-    <div class="flex items-center space-x-4">
-        <AuthorizeView>
-            <Authorized>
-                <div class="nav-item px-3">
-                    <NavLink class="nav-link" href="Account/Manage">
-                        <span class="bi bi-person-fill-nav-menu" aria-hidden="true"></span> @context.User.Identity?.Name
-                    </NavLink>
-                </div>
-                <div class="nav-item px-3">
-                    <form action="Account/Logout" method="post">
-                        <AntiforgeryToken/>
-                        <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
-                        <button type="submit" class="nav-link">
-                            <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
-                        </button>
-                    </form>
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                @* <div class="nav-item px-3"> *@
-                @*     <NavLink class="nav-link" href="Account/Register"> *@
-                @*         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register *@
-                @*     </NavLink> *@
-                @* </div> *@
-                <div class="">
-                    <NavLink href="Account/Login" class="btn btn-primary rounded-lg">
-                        Войти
-                    </NavLink>
-                </div>
-            </NotAuthorized>
-        </AuthorizeView>
+        <div class="navbar-end">
+            <AuthorizeView>
+                <Authorized>
+                    <div class="nav-item px-3">
+                        <NavLink class="nav-link" href="Account/Manage">
+                            <span class="bi bi-person-fill-nav-menu"
+                                  aria-hidden="true"></span> @context.User.Identity?.Name
+                        </NavLink>
+                    </div>
+                    <div class="nav-item px-3">
+                        <form action="Account/Logout" method="post">
+                            <AntiforgeryToken/>
+                            <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
+                            <button type="submit" class="nav-link">
+                                <span class="bi bi-arrow-bar-left-nav-menu" aria-hidden="true"></span> Logout
+                            </button>
+                        </form>
+                    </div>
+                </Authorized>
+                <NotAuthorized>
+                    @* <div class="nav-item px-3"> *@
+                    @*     <NavLink class="nav-link" href="Account/Register"> *@
+                    @*         <span class="bi bi-person-nav-menu" aria-hidden="true"></span> Register *@
+                    @*     </NavLink> *@
+                    @* </div> *@
+                    <div class="">
+                        <NavLink href="Account/Login" class="btn btn-primary rounded-lg">
+                            Войти
+                        </NavLink>
+                    </div>
+                </NotAuthorized>
+            </AuthorizeView>
+        </div>
     </div>
 </header>
 
@@ -77,5 +109,6 @@
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
     }
+
 }
 
