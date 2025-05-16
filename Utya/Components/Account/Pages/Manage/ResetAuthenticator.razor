@@ -11,28 +11,33 @@
 
 <PageTitle>Reset authenticator key</PageTitle>
 
-<StatusMessage />
-<h3>Reset authenticator key</h3>
-<div class="alert alert-warning" role="alert">
-    <p>
-        <span class="glyphicon glyphicon-warning-sign"></span>
-        <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure it.</strong>
-    </p>
-    <p>
-        This process disables 2FA until you verify your authenticator app.
-        If you do not complete your authenticator app configuration you may lose access to your account.
-    </p>
-</div>
-<div>
-    <form @formname="reset-authenticator" @onsubmit="OnSubmitAsync" method="post">
-        <AntiforgeryToken />
-        <button class="btn btn-danger" type="submit">Reset authenticator key</button>
-    </form>
+<StatusMessage/>
+<h3 class="text-2xl">Reset authenticator key</h3>
+<div class="my-4">
+    <div class="alert alert-warning" role="alert">
+        <i class="fa-solid fa-triangle-exclamation text-xl"></i>
+        <div>
+            <p>
+                <span class="glyphicon glyphicon-warning-sign"></span>
+                <strong>If you reset your authenticator key your authenticator app will not work until you reconfigure
+                    it.</strong>
+            </p>
+            <p>
+                This process disables 2FA until you verify your authenticator app.
+                If you do not complete your authenticator app configuration you may lose access to your account.
+            </p>
+        </div>
+    </div>
+    <div class="my-4">
+        <form @formname="reset-authenticator" @onsubmit="OnSubmitAsync" method="post">
+            <AntiforgeryToken/>
+            <button class="btn btn-wide btn-error rounded-lg" type="submit">Reset authenticator key</button>
+        </form>
+    </div>
 </div>
 
 @code {
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
     private async Task OnSubmitAsync()
     {
@@ -49,4 +54,5 @@
             "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.",
             HttpContext);
     }
+
 }

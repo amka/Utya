@@ -11,31 +11,31 @@
 
 <PageTitle>Profile</PageTitle>
 
-
-<h3 class="text-xl">Profile</h3>
+<h3 class="text-2xl">Profile</h3>
 <StatusMessage/>
 
-<div class="">
-    <div class="col-xl-6">
-        <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post">
-            <DataAnnotationsValidator/>
-            <ValidationSummary class="text-danger" role="alert"/>
-            <fieldset class="fieldset">
-                <legend for="username" class="fieldset-legend">Username</legend>
-                <input type="text" value="@_username" id="username" class="input"
-                       placeholder="Choose your username." disabled/>
-            </fieldset>
-            <fieldset class="fieldset">
-                <legend for="Input.PhoneNumber" class="fieldset-legend">Phone number</legend>
-                <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="input"
-                           placeholder="Enter your phone number"/>
-                <ValidationMessage For="() => Input.PhoneNumber" class="text-danger"/>
-            </fieldset>
-            <button type="submit" class="btn-block btn btn-lg btn-primary">Save</button>
-        </EditForm>
-    </div>
+<div class="mt-4">
+    <EditForm Model="Input" FormName="profile" OnValidSubmit="OnValidSubmitAsync" method="post"
+              class="max-w-100">
+        <DataAnnotationsValidator/>
+        <ValidationSummary class="text-danger" role="alert"/>
+        <fieldset class="fieldset">
+            <legend for="username" class="fieldset-legend">Username</legend>
+            <input type="text" value="@_username" id="username" class="input w-full rounded-lg"
+                   placeholder="Choose your username." disabled/>
+        </fieldset>
+        <fieldset class="fieldset">
+            <legend for="Input.PhoneNumber" class="fieldset-legend">Phone number</legend>
+            <InputText @bind-Value="Input.PhoneNumber" id="Input.PhoneNumber" class="input w-full rounded-lg"
+                       placeholder="Enter your phone number"/>
+            <ValidationMessage For="() => Input.PhoneNumber" class="text-danger"/>
+        </fieldset>
+        <div class="my-4">
+            <button type="submit" class="btn btn-block btn-primary rounded-lg">Save</button>
+        </div>
+    </EditForm>
 </div>
-    
+
 
 @code {
     private ApplicationUser _user = null!;

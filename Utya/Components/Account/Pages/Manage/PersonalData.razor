@@ -4,31 +4,33 @@
 
 <PageTitle>Personal Data</PageTitle>
 
-<StatusMessage />
-<h3>Personal Data</h3>
+<StatusMessage/>
+<h3 class="text-2xl">Personal Data</h3>
 
-<div class="row">
-    <div class="col-md-6">
-        <p>Your account contains personal data that you have given us. This page allows you to download or delete that data.</p>
+<div class="mt-4">
+    <div class="">
+        <p>Your account contains personal data that you have given us. This page allows you to download or delete that
+            data.</p>
         <p>
             <strong>Deleting this data will permanently remove your account, and this cannot be recovered.</strong>
         </p>
-        <form action="Account/Manage/DownloadPersonalData" method="post">
-            <AntiforgeryToken />
-            <button class="btn btn-primary" type="submit">Download</button>
-        </form>
-        <p>
-            <a href="Account/Manage/DeletePersonalData" class="btn btn-danger">Delete</a>
-        </p>
     </div>
+    <form action="Account/Manage/DownloadPersonalData" method="post" class="mt-4 flex flex-col md:flex-row gap-2">
+        <AntiforgeryToken/>
+        <button class="btn btn-wide btn-primary rounded-lg " type="submit">Download</button>
+        <a href="Account/Manage/DeletePersonalData" class="btn btn-wide btn-error rounded-lg">Delete</a>
+    </form>
+    <p class="my-4">
+        
+    </p>
 </div>
 
 @code {
-    [CascadingParameter]
-    private HttpContext HttpContext { get; set; } = default!;
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
         _ = await UserAccessor.GetRequiredUserAsync(HttpContext);
     }
+
 }
