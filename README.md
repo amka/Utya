@@ -1,12 +1,11 @@
 # 🪿 Гуся — сервис сокращения ссылок для РФ
 
+[![Build](https://github.com/amka/Utya/actions/workflows/dotnet.yml/badge.svg)](https://github.com/amka/Utya/actions/workflows/dotnet.yml)
 [![.NET](https://img.shields.io/badge/.NET-512BD4?logo=dotnet&logoColor=fff)](https://dot.net/)
 [![PostgreSQL](https://img.shields.io/badge/Postgres-%23316192.svg?logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Быстрое сокращение ссылок с аналитикой и адаптацией под российский рынок**
-
-![Логотип сервиса](https://via.placeholder.com/800x200.png?text=Utya+-+Сокращай+ссылку+за+1+клик)
 
 ## 🌟 Возможности
 
