@@ -1,4 +1,6 @@
-﻿@implements IDisposable
+﻿@using System.Security.Cryptography
+@using System.Text
+@implements IDisposable
 
 @inject NavigationManager NavigationManager
 
@@ -7,7 +9,11 @@
         <div class="navbar-start">
             <div class="dropdown">
                 <div tabindex="0" role="button" class="btn btn-ghost lg:hidden">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"> <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" /> </svg>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                              d="M4 6h16M4 12h8m-8 6h16"/>
+                    </svg>
                 </div>
                 <ul
                     tabindex="0"
@@ -26,52 +32,111 @@
                     </li>
                 </ul>
             </div>
-            
+
             <div class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
                 <NavLink class="text-2xl font-bold text-gradient" href="" Match="NavLinkMatch.All">
                     <i class="text-xl">🪿</i>
                 </NavLink>
             </div>
             <h1 class="text-2xl font-bold text-gradient">
-                <a href="/" data-turbo-action="replace">Utya</a>
+                <AuthorizeView>
+                    <Authorized>
+                        <NavLink class="text-2xl font-bold text-gradient" href="/app" Match="NavLinkMatch.All">
+                            Utya App
+                        </NavLink>
+                    </Authorized>
+                    <NotAuthorized>
+                        <NavLink class="text-2xl font-bold text-gradient" href="" Match="NavLinkMatch.All">
+                            Utya
+                        </NavLink>
+                    </NotAuthorized>
+                </AuthorizeView>
             </h1>
         </div>
 
         <div class="navbar-center hidden lg:flex">
+
             <nav class="menu menu-horizontal">
-                <li>
-                    <NavLink href="/#features" class="hover:text-primary transition">Возможности</NavLink>
-                </li>
-                <li>
-                    <NavLink href="/#pricing" class="hover:text-primary transition">Тарифы</NavLink>
-                </li>
-                <li>
-                    <NavLink href="/#faq" class="hover:text-primary transition">FAQ</NavLink>
-                </li>
-                <li>
-                    <NavLink href="/contacts" class="hover:text-primary transition">Контакты</NavLink>
-                </li>
+                <AuthorizeView>
+                    <Authorized>
+                        <li>
+                            <NavLink href="/account" class="rounded-lg hover:text-primary transition">
+                                <i class="fa-solid fa-gears"></i>
+                                Управление
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink href="/account" class="rounded-lg hover:text-primary transition">
+                                <i class="fa-solid fa-chart-simple"></i>
+                                Статистика
+                            </NavLink>
+                        </li>
+                    </Authorized>
+                    <NotAuthorized>
+                        <li>
+                            <NavLink href="/#features" class="rounded-lg hover:text-primary transition">Возможности
+                            </NavLink>
+                        </li>
+                        <li>
+                            <NavLink href="/#pricing" class="rounded-lg hover:text-primary transition">Тарифы</NavLink>
+                        </li>
+                        <li>
+                            <NavLink href="/#faq" class="rounded-lg hover:text-primary transition">FAQ</NavLink>
+                        </li>
+                        <li>
+                            <NavLink href="/contacts" class="rounded-lg hover:text-primary transition">Контакты
+                            </NavLink>
+                        </li>
+                    </NotAuthorized>
+                </AuthorizeView>
             </nav>
         </div>
 
         <div class="navbar-end">
             <AuthorizeView>
                 <Authorized>
-                    <div class="nav-item px-3">
-                        <NavLink class="nav-link" href="Account/Manage">
-                            <span class="bi bi-person-fill-nav-menu"
-                                  aria-hidden="true"></span> @context.User.Identity?.Name
-                        </NavLink>
+                    <div class="dropdown dropdown-end">
+                        <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+                            <div class="w-10 rounded-full">
+                                <img
+                                    alt="Tailwind CSS Navbar component"
+                                    src="@GetGravatarUrl(context.User.Identity?.Name)"/>
+                            </div>
+                        </div>
+                        <ul
+                            tabindex="0"
+                            class="menu dropdown-content rounded-box bg-base-200 rounded-box mt-2 z-1 w-52 p-2 shadow-lg">
+                            <li>
+                                <a class="rounded-lg" href="Account/Manage">
+                                    Профиль
+                                </a>
+                            </li>
+                            <li>
+                                <form action="Account/Logout" method="post">
+                                    <AntiforgeryToken/>
+                                    <input type="hidden" name="ReturnUrl" value="@_currentUrl"/>
+                                    <button type="submit" class="rounded-lg cursor-pointer">
+                                        Выйти
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
                     </div>
-                    <div class="nav-item px-3">
-                        <form action="Account/Logout" method="post">
-                            <AntiforgeryToken/>
-                            <input type="hidden" name="ReturnUrl" value="@currentUrl"/>
-                            <button type="submit" class="nav-link">
-                                Выйти
-                            </button>
-                        </form>
-                    </div>
+                    @* <div class="nav-item px-3"> *@
+                    @*     <NavLink class="nav-link" href="Account/Manage"> *@
+                    @*         <span class="bi bi-person-fill-nav-menu" *@
+                    @*               aria-hidden="true"></span> @context.User.Identity?.Name *@
+                    @*     </NavLink> *@
+                    @* </div> *@
+                    @* <div class="nav-item px-3"> *@
+                    @*     <form action="Account/Logout" method="post"> *@
+                    @*         <AntiforgeryToken/> *@
+                    @*         <input type="hidden" name="ReturnUrl" value="@currentUrl"/> *@
+                    @*         <button type="submit" class="nav-link"> *@
+                    @*             Выйти *@
+                    @*         </button> *@
+                    @*     </form> *@
+                    @* </div> *@
                 </Authorized>
                 <NotAuthorized>
                     @* <div class="nav-item px-3"> *@
@@ -80,7 +145,7 @@
                     @*     </NavLink> *@
                     @* </div> *@
                     <div class="">
-                        <NavLink href="Account/Login" class="btn btn-primary rounded-lg">
+                        <NavLink href="Account/Login?ReturnUrl=/app" class="btn btn-primary rounded-lg">
                             Войти
                         </NavLink>
                     </div>
@@ -91,23 +156,42 @@
 </header>
 
 @code {
-    private string? currentUrl;
+    private string? _currentUrl;
 
     protected override void OnInitialized()
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+        _currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
         NavigationManager.LocationChanged += OnLocationChanged;
     }
 
     private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
     {
-        currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+        _currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
         StateHasChanged();
     }
 
     public void Dispose()
     {
         NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    private static string GetGravatarUrl(string email)
+    {
+        // Normalize the email address: trim and convert to lowercase
+        email = email.Trim().ToLower();
+
+        using var sha256 = SHA256.Create();
+        var emailBytes = Encoding.UTF8.GetBytes(email);
+
+        var sb = new StringBuilder();
+        foreach (var b in sha256.ComputeHash(emailBytes))
+        {
+            sb.Append(b.ToString("x2"));
+        }
+
+        var gravatarUrl = $"https://www.gravatar.com/avatar/{sb}?s=64&d=initials&name={email}";
+
+        return gravatarUrl;
     }
 
 }
