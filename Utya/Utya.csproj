@@ -26,10 +26,6 @@
     </ItemGroup>
 
     <ItemGroup>
-        <AdditionalFiles Include="Components\Layout\AppHeader.razor"/>
-    </ItemGroup>
-
-    <ItemGroup>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.css.map"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\css\bootstrap-grid.min.css"/>
@@ -74,6 +70,10 @@
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js"/>
         <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Components\Dashboard\_Imports.razor" />
     </ItemGroup>
 
 </Project>

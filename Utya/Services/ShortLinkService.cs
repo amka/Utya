@@ -24,10 +24,10 @@ public class ShortLinkService(
             {
                 throw new ArgumentException("Этот алиас уже занят");
             }
-            
+
             // request.CustomAlias = request.CustomAlias.ToLowerInvariant();
         }
-        
+
         var shortLink = new ShortLink
         {
             OriginalUrl = request.OriginalUrl,
@@ -105,5 +105,14 @@ public class ShortLinkService(
 
         await context.Clicks.AddAsync(click);
         await context.SaveChangesAsync();
+    }
+
+    public async Task<List<ShortLink>> GetLinksAsync(int page, int perPage)
+    {
+        return await context.ShortLinks
+            // .Include(s => s.Clicks)
+            .Skip((page - 1) * perPage)
+            .Take(perPage)
+            .ToListAsync();
     }
 }
