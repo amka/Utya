@@ -1,0 +1,24 @@
+@using Utya.Data
+
+<div class="card shadow-sm mb-2 bg-base-200/40">
+    <div class="card-body px-4 py-3">
+        <div class="font-bold">utya.ru/@Link.ShortCode
+            <button class="btn btn-sm btn-circle btn-ghost">
+                <i class="fas fa-copy"></i>
+            </button>
+
+            <button class="btn btn-sm btn-circle btn-ghost">
+                <i class="fas fa-share"></i>
+            </button>
+
+        </div>
+        <span class="text-sm text-base-content/50 break-all">
+            <i class="fa-solid fa-caret-right mr-2"></i>
+            @Link.OriginalUrl
+        </span>
+    </div>
+</div>
+
+@code {
+    [Parameter] public required ShortLink Link { get; set; }
+}

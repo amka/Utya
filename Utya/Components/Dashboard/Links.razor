@@ -1,0 +1,54 @@
+@page "/App/Links"
+@using Utya.Data
+@using Utya.Services
+@using Microsoft.AspNetCore.Components.Sections
+
+@inject ShortLinkService ShortLinkService
+@rendermode InteractiveServer
+
+<PageTitle>Ссылки</PageTitle>
+
+<SectionContent SectionName="top-bar">
+    <h3 class="text-2xl">Ссылки</h3>
+</SectionContent>
+
+<div class="flex flex-col">
+    
+
+    <div class="p-4">
+        <Virtualize Items="_links" Context="link">
+            <Placeholder>
+                <p>
+                    Загружаю&hellip;
+                </p>
+            </Placeholder>
+            <ItemContent>
+                <ShortLinkItem Link="@link"/>
+            </ItemContent>
+            <EmptyContent>
+                <p>
+                    Кажется, у вас пока нет ссылок.
+                </p>
+            </EmptyContent>
+        </Virtualize>
+    </div>
+</div>
+
+@code {
+    List<ShortLink> _links = [];
+    int _page = 1;
+    int _perPage = 10;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _links = await ShortLinkService.GetLinksAsync(_page, _perPage);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine(ex.Message);
+        }
+    }
+
+}

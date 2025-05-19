@@ -1,0 +1,101 @@
+@using System.Security.Cryptography
+@using System.Text
+@using Microsoft.AspNetCore.Components.Sections
+@implements IDisposable
+
+@inherits LayoutComponentBase
+
+@inject NavigationManager NavigationManager
+
+<div class="drawer lg:drawer-open overflow-hidden">
+  <input id="app-drawer" type="checkbox" class="drawer-toggle"/>
+  <div class="drawer-content overflow-y-scroll">
+
+    <div class="navbar px-6 h-[64px] w-full">
+      <label for="app-drawer" class="btn btn-square btn-sm drawer-button lg:hidden mr-2">
+        <i class="fas fa-bars"></i>
+      </label>
+      <div class="flex justify-between flex-grow">
+        <SectionOutlet SectionName="top-bar"/>
+      </div>
+    </div>
+
+    <main class="page flex flex-grow">
+      @Body
+    </main>
+  </div>
+
+  <div class="drawer-side overflow-y-scroll">
+    <label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+    <div class="bg-base-300 text-base-content min-h-full w-60 flex flex-col">
+
+      <AppDrawer/>
+    </div>
+  </div>
+</div>
+
+@* <div style="bottom:0 !important;position: fixed !important;"> *@
+@*   <div class="dock md:hidden flex justify-evenly bg-base-100 w-screen p-2"> *@
+@*     <NavLink ActiveClass="dock-active" href="App" Match="NavLinkMatch.All" class="text-center"> *@
+@*       <span class="block text-2xl"><i class="fa-solid fa-house-chimney"></i></span> *@
+@*       <span class="dock-label">Статистика</span> *@
+@*     </NavLink> *@
+@* *@
+@*     <NavLink ActiveClass="dock-active" href="App/Links" Match="NavLinkMatch.All" class="text-center"> *@
+@*       <span class="block text-2xl"><i class="fa-solid fa-link"></i></span> *@
+@*       <span class="dock-label">Ссылки</span> *@
+@*     </NavLink> *@
+@* *@
+@*     <NavLink ActiveClass="dock-active" href="Account/Manage" Match="NavLinkMatch.All" class="text-center"> *@
+@*       <span class="block text-2xl"><i class="fa-solid fa-user"></i></span> *@
+@*       <span class="dock-label">Профиль</span> *@
+@*     </NavLink> *@
+@*   </div> *@
+@* </div> *@
+
+<div id="blazor-error-ui" data-nosnippet>
+  An unhandled error has occurred.
+  <a href="." class="reload">Reload</a>
+  <span class="dismiss">🗙</span>
+</div>
+
+@code
+{
+  private string? _currentUrl;
+
+  protected override void OnInitialized()
+  {
+    _currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+    NavigationManager.LocationChanged += OnLocationChanged;
+  }
+
+  private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+  {
+    _currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+    StateHasChanged();
+  }
+
+  public void Dispose()
+  {
+    NavigationManager.LocationChanged -= OnLocationChanged;
+  }
+
+  private static string GetGravatarUrl(string email)
+  {
+    // Normalize the email address: trim and convert to lowercase
+    email = email.Trim().ToLower();
+
+    using var sha256 = SHA256.Create();
+    var emailBytes = Encoding.UTF8.GetBytes(email);
+
+    var sb = new StringBuilder();
+    foreach (var b in sha256.ComputeHash(emailBytes))
+    {
+      sb.Append(b.ToString("x2"));
+    }
+
+    var gravatarUrl = $"https://www.gravatar.com/avatar/{sb}?s=64&d=initials&name={email}";
+
+    return gravatarUrl;
+  }
+}

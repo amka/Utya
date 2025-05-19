@@ -1,0 +1,157 @@
+@using System.Security.Cryptography
+@using System.Text
+@implements IDisposable
+
+@inject NavigationManager NavigationManager
+
+<div class="navbar flex px-4 w-full items-start">
+  <NavLink class="text-2xl font-bold text-gradient active flex flex-row flex-nowrap items-center flex-shrink"
+             href="App"
+             Match="NavLinkMatch.All">
+    <span class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
+      <i class="text-xl">🪿</i>
+    </span>
+      Utya App
+    </NavLink>
+  
+</div>
+
+<ul class="menu flex-col w-full">
+  <li>
+    <NavLink href="App" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+      <i class="fas fa-chart-simple"></i>
+      Статистика
+    </NavLink>
+  </li>
+  <li>
+    <NavLink href="App/Links" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+      <i class="fas fa-link"></i>
+      Ссылки
+    </NavLink>
+  </li>
+</ul>
+
+
+<div class="flex flex-grow"></div>
+
+<ul class="menu flex flex-col w-full">
+  <li>
+    <NavLink href="App/Settings" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+      <i class="fas fa-gears"></i>
+      Настройки
+    </NavLink>
+  </li>
+  <li>
+    <NavLink href="App/Support" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+      <i class="fas fa-comments"></i>
+      Поддержка
+    </NavLink>
+  </li>
+</ul>
+
+<div class="card bg-base-100 shadow-sm m-2">
+  <div class="card-body" style="padding: 0.75rem;">
+    <div class="card-title">
+      Free Usage
+    </div>
+    <div>
+      <div class="flex justify-between">
+        <h4>Ссылки</h4>
+        <span>
+          <span class="font-bold">10</span>
+          /
+          <span class="">100</span>
+        </span>
+      </div>
+      <progress class="progress progress-primary w-full" value="10" max="100"></progress>
+    </div>
+    <div>
+      <div class="flex justify-between">
+        <h4>Переходы</h4>
+        <span>
+          <span class="font-bold">3791</span>
+          /
+          <span class="">10000</span>
+        </span>
+      </div>
+      <progress class="progress progress-primary w-full" value="3791" max="10000"></progress>
+    </div>
+  </div>
+</div>
+
+<div class="p-2">
+  <AuthorizeView>
+    <Authorized>
+      <div class="dropdown  dropdown-top dropdown-center w-full">
+        <div tabindex="0" role="button" class="btn btn-ghost btn-block justify-start avatar">
+          <div class="w-6 rounded-full">
+            <img
+              alt="Tailwind CSS Navbar component"
+              src="@GetGravatarUrl(context.User.Identity?.Name)"/>
+          </div>
+          <span class="font-bold">@context.User.Identity?.Name</span>
+        </div>
+        <ul
+          tabindex="0"
+          class="menu dropdown-content rounded-box bg-base-200 rounded-box mt-2 z-1 w-52 p-2 shadow-lg">
+          <li>
+            <a class="rounded-lg" href="Account/Manage">
+              Профиль
+            </a>
+          </li>
+          <li>
+            <form action="Account/Logout" method="post">
+              <AntiforgeryToken/>
+              <input type="hidden" name="ReturnUrl" value="@_currentUrl"/>
+              <button type="submit" class="rounded-lg cursor-pointer">
+                Выйти
+              </button>
+            </form>
+          </li>
+        </ul>
+      </div>
+    </Authorized>
+  </AuthorizeView>
+</div>
+
+@code {
+  private string? _currentUrl;
+
+  protected override void OnInitialized()
+  {
+    _currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
+    NavigationManager.LocationChanged += OnLocationChanged;
+  }
+
+  private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+  {
+    _currentUrl = NavigationManager.ToBaseRelativePath(e.Location);
+    StateHasChanged();
+  }
+
+  public void Dispose()
+  {
+    NavigationManager.LocationChanged -= OnLocationChanged;
+  }
+
+  private static string GetGravatarUrl(string email)
+  {
+    // Normalize the email address: trim and convert to lowercase
+    email = email.Trim().ToLower();
+
+    using var sha256 = SHA256.Create();
+    var emailBytes = Encoding.UTF8.GetBytes(email);
+
+    var sb = new StringBuilder();
+    foreach (var b in sha256.ComputeHash(emailBytes))
+    {
+      sb.Append(b.ToString("x2"));
+    }
+
+    var gravatarUrl = $"https://www.gravatar.com/avatar/{sb}?s=24&d=initials&name={email}";
+
+    return gravatarUrl;
+  }
+
+}
+
