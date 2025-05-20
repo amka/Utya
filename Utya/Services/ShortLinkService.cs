@@ -110,7 +110,7 @@ public class ShortLinkService(
     public async Task<List<ShortLink>> GetLinksAsync(int page, int perPage)
     {
         return await context.ShortLinks
-            // .Include(s => s.Clicks)
+            .Include(s => s.Clicks)
             .Skip((page - 1) * perPage)
             .Take(perPage)
             .ToListAsync();

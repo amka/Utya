@@ -2,23 +2,55 @@
 
 <div class="card shadow-sm mb-2 bg-base-200/40">
     <div class="card-body px-4 py-3">
-        <div class="font-bold">utya.ru/@Link.ShortCode
-            <button class="btn btn-sm btn-circle btn-ghost">
-                <i class="fas fa-copy"></i>
-            </button>
+        <div class="flex flex-row gap-2">
+            <div class="avatar">
+                <div class="rounded-full w-8">
+                    <img src="@GetFaviconUrl(Link.OriginalUrl)" alt="@GetHost(Link.OriginalUrl)"/>
+                </div>
+            </div>
+            <div class="font-bold">utya.ru/@Link.ShortCode
+                <button class="btn btn-sm btn-circle btn-ghost">
+                    <i class="fas fa-copy"></i>
+                </button>
 
-            <button class="btn btn-sm btn-circle btn-ghost">
-                <i class="fas fa-share"></i>
-            </button>
-
+                <button class="btn btn-sm btn-circle btn-ghost">
+                    <i class="fas fa-share"></i>
+                </button>
+            </div>
         </div>
-        <span class="text-sm text-base-content/50 break-all">
+        
+        <div class="text-sm text-base-content/50 break-all">
             <i class="fa-solid fa-caret-right mr-2"></i>
             @Link.OriginalUrl
-        </span>
+        </div>
+        
+        <div class="gap-2 flex">
+            <span class="badge badge-outline">
+                <i class="fa-solid fa-person-walking"></i>
+                @Link.Clicks.Count
+                <span class="">Visitors</span>
+            </span>
+            <span class="badge badge-outline">
+                <i class="fa-solid fa-arrow-pointer"></i>
+                @Link.Clicks.Count
+                <span class="">Clicks</span>
+            </span>
+        </div>
     </div>
 </div>
 
 @code {
     [Parameter] public required ShortLink Link { get; set; }
+
+    private static string GetHost(string url)
+    {
+        return (new Uri(url)).Host;
+    }
+
+    private static string GetFaviconUrl(string url)
+    {
+        var uri = new Uri(url);
+        return $"{uri.Scheme}://{uri.Host}/favicon.ico";
+    }
+
 }
