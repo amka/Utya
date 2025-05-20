@@ -1,9 +1,12 @@
 @page "/App/Links"
-@using Utya.Data
-@using Utya.Services
+@using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Components.Sections
+@using Utya.Data
+@using Utya.Models
 
-@inject ShortLinkService ShortLinkService
+@inject ILogger<Links> Logger
+@inject NavigationManager NavigationManager
+@inject HttpClient HttpClient
 @rendermode InteractiveServer
 
 @attribute [StreamRendering]
@@ -12,44 +15,140 @@
 
 <SectionContent SectionName="top-bar">
     <h3 class="text-2xl">Ссылки</h3>
+
+    <label for="create-link-drawer" class="btn btn-primary rounded-lg">
+        <i class="fas fa-plus"></i>
+        Создать ссылку
+    </label>
 </SectionContent>
 
-<div class="flex flex-col">
-    
+<div class="drawer drawer-end">
+    <input id="create-link-drawer" type="checkbox" class="drawer-toggle"/>
+    <div class="drawer-content">
+        <div class="flex flex-col">
+            <div class="p-4">
+                <Virtualize Items="_links" Context="link">
+                    <Placeholder>
+                        <p>
+                            Загружаю&hellip;
+                        </p>
+                    </Placeholder>
+                    <ItemContent>
+                        <ShortLinkItem Link="@link"/>
+                    </ItemContent>
+                    <EmptyContent>
+                        <p>
+                            Кажется, у вас пока нет ссылок.
+                        </p>
+                    </EmptyContent>
+                </Virtualize>
+            </div>
+        </div>
+    </div>
 
-    <div class="p-4">
-        <Virtualize Items="_links" Context="link">
-            <Placeholder>
-                <p>
-                    Загружаю&hellip;
-                </p>
-            </Placeholder>
-            <ItemContent>
-                <ShortLinkItem Link="@link"/>
-            </ItemContent>
-            <EmptyContent>
-                <p>
-                    Кажется, у вас пока нет ссылок.
-                </p>
-            </EmptyContent>
-        </Virtualize>
+    <div class="drawer-side">
+
+        <div class="flex flex-col flex-grow w-1/2 max-w-[480px] bg-base-100 h-screen shadow-lg">
+            <div class="flex px-4 navbar menu-horizontal align-center gap-2">
+                <label for="create-link-drawer" aria-label="close sidebar" class="btn btn-square btn-soft rounded-lg">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                </label>
+                <h3 class="text-2xl">Создать ссылку</h3>
+            </div>
+
+            <CreateLinkForm Loading="@Loading" OnSubmit="OnCreateLinkSubmit"></CreateLinkForm>
+        </div>
     </div>
 </div>
 
 @code {
-    List<ShortLink> _links = [];
+    List<ShortLink>? _links = [];
     int _page = 1;
     int _perPage = 10;
 
+    public enum Expiration
+    {
+        Never,
+        SixHours,
+        OneDay,
+        OneWeek,
+        OneMonth,
+        SixMonths,
+        OneYear
+    }
+
+    public class ShortLinkFormModel
+    {
+        [Required]
+        [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        [Url(ErrorMessage = "{0} is not a valid URL")]
+        public string? Url { get; set; }
+
+        [StringLength(32, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
+        public string? Password { get; set; }
+
+        public string? CustomAlias { get; set; }
+
+        public Expiration? Expiration { get; set; }
+    }
+
+    private CreateShortLinkResponse? ResultModel { get; set; }
+    private bool Loading { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
+        HttpClient.BaseAddress = new Uri(NavigationManager.BaseUri);
         try
         {
-            _links = await ShortLinkService.GetLinksAsync(_page, _perPage);
+            Loading = true;
+            await Task.Delay(1);
+            _links = await HttpClient.GetFromJsonAsync<List<ShortLink>>($"api/v1/links?page={_page}&perPage={_perPage}");
         }
         catch (Exception ex)
         {
-            Console.WriteLine(ex.Message);
+            Logger.LogInformation(ex.Message);
+        }
+        finally
+        {
+            Loading = false;
+        }
+    }
+
+    private async Task OnCreateLinkSubmit(ShortLinkFormModel model)
+    {
+        Logger.LogInformation("Form Submitted: \n..URL: {};\n..CustomAlias: {};\n..Password: {};\n..Expiration: {};", model.Url, model.CustomAlias, model.Password, model.Expiration);
+        try
+        {
+            Loading = true;
+            await Task.Delay(1);
+
+            // Calculate expiration datetime based on Expiration select
+            var expiredAt = DateTime.UtcNow + model.Expiration switch
+            {
+                Expiration.SixHours => TimeSpan.FromHours(6),
+                Expiration.OneDay => TimeSpan.FromDays(1),
+                Expiration.OneWeek => TimeSpan.FromDays(7),
+                Expiration.OneMonth => TimeSpan.FromDays(30),
+                Expiration.SixMonths => TimeSpan.FromDays(180),
+                Expiration.OneYear => TimeSpan.FromDays(365),
+                _ => null,
+            };
+
+            var createRequest = new CreateShortLinkRequest(model.Url!)
+            {
+                CustomAlias = model.CustomAlias,
+                Password = model.Password,
+                ExpiresAt = expiredAt,
+            };
+            var response = await HttpClient.PostAsJsonAsync("api/v1/links", createRequest);
+            if (response.IsSuccessStatusCode)
+            {
+                ResultModel = await response.Content.ReadFromJsonAsync<CreateShortLinkResponse>();
+            }
+        }
+        finally
+        {
+            Loading = false;
         }
     }
 

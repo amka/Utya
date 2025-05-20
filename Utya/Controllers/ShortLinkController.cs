@@ -1,6 +1,7 @@
 using System.Drawing;
 using System.Text;
 using QRCoder;
+using Utya.Data;
 using Utya.Models;
 using Utya.Services;
 
@@ -91,5 +92,20 @@ public class ShortLinkController : ControllerBase
     {
         var link = await _shortLinkService.GetLinkAsync(id);
         return link != null ? Ok(link) : NotFound();
+    }
+    
+    [HttpGet]
+    [Authorize]
+    [ProducesResponseType(typeof(List<ShortLink>), 200)]
+    public async Task<IActionResult> GetLinks([FromQuery]int page, [FromQuery]int perPage, [FromQuery]string? search)
+    {
+        var user = User.Identity is { IsAuthenticated: true }
+            ? await _shortLinkService.GetCurrentUserAsync(User)
+            : null;
+
+        if (user == null) return Unauthorized();
+        
+        var links = await _shortLinkService.GetLinksAsync(page, perPage, user);
+        return Ok(links);
     }
 }

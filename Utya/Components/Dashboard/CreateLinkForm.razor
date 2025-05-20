@@ -1,0 +1,73 @@
+@rendermode InteractiveServer
+
+<EditForm Enhance="true" Model="@Model" class="flex flex-col flex-grow px-4"
+          OnValidSubmit="_OnSubmit"
+          FormName="CreateLinkForm">
+
+    <DataAnnotationsValidator/>
+    <ValidationSummary class="text-warning" role="alert"/>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">URL</legend>
+        <InputText class="input w-full rounded-lg" @bind-Value="Model!.Url" autofocus disabled="@Loading"/>
+        <ValidationMessage For="() => Model!.Url" class="text-warning"/>
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Alias</legend>
+        <InputText class="input w-full rounded-lg" @bind-Value="Model!.CustomAlias" disabled="@Loading"/>
+        <ValidationMessage For="() => Model!.CustomAlias" class="text-warning"/>
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Password</legend>
+        <InputText class="input w-full rounded-lg" @bind-Value="Model!.Password" disabled="@Loading"/>
+        <ValidationMessage For="() => Model!.Password" class="text-warning"/>
+    </fieldset>
+
+    <fieldset class="fieldset">
+        <legend class="fieldset-legend">Expiration</legend>
+        <InputSelect @bind-Value="Model!.Expiration" class="select w-full rounded-lg bg-base-100 text-base-content"
+                     disabled="@Loading">
+            <option value="@Links.Expiration.Never">Никогда</option>
+            <option value="@Links.Expiration.SixHours">6 часов</option>
+            <option value="@Links.Expiration.OneDay">1 день</option>
+            <option value="@Links.Expiration.OneWeek">1 неделя</option>
+            <option value="@Links.Expiration.OneMonth">1 месяц</option>
+            <option value="@Links.Expiration.SixMonths">6 месяцев</option>
+            <option value="@Links.Expiration.OneYear">1 год</option>
+        </InputSelect>
+        <ValidationMessage For="() => Model!.Expiration"/>
+    </fieldset>
+
+    <div class="flex flex-grow"></div>
+
+    <div class="my-4 flex justify-end">
+        @if (Loading)
+        {
+            <span class="loading loading-spinner"></span>
+        }
+        <button type="submit" class="btn btn-primary rounded-lg" disabled="@Loading">
+            <i class="fas fa-plus"></i>
+            Создать ссылку
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    [SupplyParameterFromForm] private Links.ShortLinkFormModel? Model { get; set; }
+
+    [Parameter] public bool Loading { get; set; } = false;
+    [Parameter] public EventCallback<Links.ShortLinkFormModel> OnSubmit { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Model = new Links.ShortLinkFormModel();
+    }
+
+    private async Task _OnSubmit()
+    {
+        await OnSubmit.InvokeAsync(Model);
+    }
+
+}

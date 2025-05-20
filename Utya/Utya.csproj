@@ -73,6 +73,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <AdditionalFiles Include="Components\Dashboard\CreateLinkForm.razor" />
       <AdditionalFiles Include="Components\Dashboard\_Imports.razor" />
     </ItemGroup>
 

@@ -12,7 +12,8 @@ public class ShortLinkService(
     ApplicationDbContext context,
     IPasswordHasher<ShortLink> hasher,
     IGeoLocator geoLocator,
-    ILogger<ShortLinkService> logger)
+    ILogger<ShortLinkService> logger,
+    UserManager<ApplicationUser> userManager)
 {
     public async Task<ShortLink> CreateShortLinkAsync(
         CreateShortLinkRequest request,
@@ -58,11 +59,10 @@ public class ShortLinkService(
 
     public async Task<ApplicationUser?> GetCurrentUserAsync(ClaimsPrincipal principal)
     {
-        var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
-        if (userId == null || !Guid.TryParse(userId, out var guid))
-            return null;
-
-        return await context.Users.FindAsync(guid);
+        // var userId = principal.FindFirstValue(ClaimTypes.NameIdentifier);
+        // if (userId == null || !Guid.TryParse(userId, out var guid))
+        //     return null;
+        return await userManager.GetUserAsync(principal);
     }
 
     private async Task<string> GenerateUniqueCode(int length = 6)
@@ -107,9 +107,11 @@ public class ShortLinkService(
         await context.SaveChangesAsync();
     }
 
-    public async Task<List<ShortLink>> GetLinksAsync(int page, int perPage)
+    public async Task<List<ShortLink>> GetLinksAsync(int page, int perPage, ApplicationUser user)
     {
         return await context.ShortLinks
+            .AsNoTracking()
+            .Where(l => l.User != null && l.User == user)
             .Include(s => s.Clicks)
             .Skip((page - 1) * perPage)
             .Take(perPage)
