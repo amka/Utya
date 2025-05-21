@@ -200,13 +200,11 @@ namespace Utya.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<int?>("PlanId")
+                        .HasColumnType("integer");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
-
-                    b.Property<string>("Tier")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("character varying(20)");
 
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
@@ -223,6 +221,8 @@ namespace Utya.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("PlanId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -245,7 +245,7 @@ namespace Utya.Migrations
                         .HasMaxLength(500)
                         .HasColumnType("character varying(500)");
 
-                    b.Property<Guid>("ShortLinkId")
+                    b.Property<Guid?>("ShortLinkId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("Timestamp")
@@ -260,6 +260,44 @@ namespace Utya.Migrations
                     b.HasIndex("ShortLinkId");
 
                     b.ToTable("Clicks");
+                });
+
+            modelBuilder.Entity("Utya.Data.Plan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("AllowAdvancedAnalytics")
+                        .HasColumnType("boolean");
+
+                    b.Property<bool>("AllowCustomDomain")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("text");
+
+                    b.Property<int>("Expiration")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MaxClicksPerMonth")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MaxLinks")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<decimal>("Price")
+                        .HasColumnType("numeric");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Plans");
                 });
 
             modelBuilder.Entity("Utya.Data.ShortLink", b =>
@@ -299,6 +337,7 @@ namespace Utya.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("UserId")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -306,6 +345,42 @@ namespace Utya.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("ShortLinks");
+                });
+
+            modelBuilder.Entity("Utya.Data.UserPlan", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("ClicksUsed")
+                        .HasColumnType("integer");
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int>("LinksUsed")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("PlanId")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime>("ValidUntil")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.HasIndex("PlanId");
+
+                    b.ToTable("UserPlans");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -359,13 +434,20 @@ namespace Utya.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Utya.Data.ApplicationUser", b =>
+                {
+                    b.HasOne("Utya.Data.Plan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId");
+
+                    b.Navigation("Plan");
+                });
+
             modelBuilder.Entity("Utya.Data.Click", b =>
                 {
                     b.HasOne("Utya.Data.ShortLink", "ShortLink")
                         .WithMany("Clicks")
-                        .HasForeignKey("ShortLinkId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ShortLinkId");
 
                     b.Navigation("ShortLink");
                 });
@@ -374,7 +456,28 @@ namespace Utya.Migrations
                 {
                     b.HasOne("Utya.Data.ApplicationUser", "User")
                         .WithMany("ShortLinks")
-                        .HasForeignKey("UserId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Utya.Data.UserPlan", b =>
+                {
+                    b.HasOne("Utya.Data.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Utya.Data.Plan", "Plan")
+                        .WithMany()
+                        .HasForeignKey("PlanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Plan");
 
                     b.Navigation("User");
                 });

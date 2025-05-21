@@ -6,6 +6,7 @@
 @using Microsoft.AspNetCore.Identity
 @using Microsoft.AspNetCore.WebUtilities
 @using Utya.Data
+@using Utya.Services
 
 @inject UserManager<ApplicationUser> UserManager
 @inject IUserStore<ApplicationUser> UserStore
@@ -14,6 +15,7 @@
 @inject ILogger<Register> Logger
 @inject NavigationManager NavigationManager
 @inject IdentityRedirectManager RedirectManager
+@inject ILimitService LimitService
 
 <PageTitle>Зарегистрироваться</PageTitle>
 
@@ -75,17 +77,27 @@
 </section>
 
 @code {
-    private IEnumerable<IdentityError>? identityErrors;
+    private IEnumerable<IdentityError>? _identityErrors;
 
     [SupplyParameterFromForm] private InputModel Input { get; set; } = new();
 
     [SupplyParameterFromQuery] private string? ReturnUrl { get; set; }
 
-    private string? Message => identityErrors is null ? null : $"Error: {string.Join(", ", identityErrors.Select(error => error.Description))}";
+    private string? Message => _identityErrors is null ? null : $"Error: {string.Join(", ", _identityErrors.Select(error => error.Description))}";
 
     public async Task RegisterUser(EditContext editContext)
     {
         var user = CreateUser();
+
+        var userPlan = new UserPlan()
+        {
+            Plan = await LimitService.GetDefaultPlanAsync(),
+            User = user,
+            IsActive = true,
+            ValidUntil = DateTime.UtcNow.Date + TimeSpan.FromDays(30),
+        };
+
+        await LimitService.AddUserPlanAsync(userPlan);
 
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
@@ -94,7 +106,7 @@
 
         if (!result.Succeeded)
         {
-            identityErrors = result.Errors;
+            _identityErrors = result.Errors;
             return;
         }
 

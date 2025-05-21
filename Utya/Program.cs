@@ -45,6 +45,7 @@ builder.Services.AddHttpClient<GeoIpService>(client =>
 });
 
 builder.Services.AddScoped<ShortLinkService>();
+builder.Services.AddScoped<ILimitService, LimitService>();
 builder.Services.AddSingleton<IGeoLocator, GeoIpService>();
 builder.Services.AddSingleton<IPasswordHasher<ShortLink>, PasswordHasher<ShortLink>>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();

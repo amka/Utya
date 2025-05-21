@@ -29,13 +29,13 @@
         <legend class="fieldset-legend">Expiration</legend>
         <InputSelect @bind-Value="Model!.Expiration" class="select w-full rounded-lg bg-base-100 text-base-content"
                      disabled="@Loading">
-            <option value="@Links.Expiration.Never">Никогда</option>
-            <option value="@Links.Expiration.SixHours">6 часов</option>
-            <option value="@Links.Expiration.OneDay">1 день</option>
-            <option value="@Links.Expiration.OneWeek">1 неделя</option>
-            <option value="@Links.Expiration.OneMonth">1 месяц</option>
-            <option value="@Links.Expiration.SixMonths">6 месяцев</option>
-            <option value="@Links.Expiration.OneYear">1 год</option>
+            <option value="@Expiration.Never">Никогда</option>
+            <option value="@Expiration.SixHours">6 часов</option>
+            <option value="@Expiration.OneDay">1 день</option>
+            <option value="@Expiration.OneWeek">1 неделя</option>
+            <option value="@Expiration.OneMonth">1 месяц</option>
+            <option value="@Expiration.SixMonths">6 месяцев</option>
+            <option value="@Expiration.OneYear">1 год</option>
         </InputSelect>
         <ValidationMessage For="() => Model!.Expiration"/>
     </fieldset>

@@ -1,15 +1,17 @@
 @page "/App/Links"
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using System.ComponentModel.DataAnnotations
 @using Blazored.Toast.Configuration
 @using Microsoft.AspNetCore.Components.Sections
+@using Utya.Components.Account
 @using Utya.Data
 @using Utya.Models
 @using Utya.Services
 
 @inject ILogger<Links> Logger
 @inject IJSRuntime JsRuntime
+@inject IdentityUserAccessor UserAccessor
 @inject IToastService ToastService
 @inject ShortLinkService ShortLinkService
 
@@ -34,21 +36,32 @@
     <div class="drawer-content">
         <div class="flex flex-col">
             <div class="p-4">
-                <Virtualize Items="_links" Context="link">
-                    <Placeholder>
-                        <p>
-                            Загружаю&hellip;
-                        </p>
-                    </Placeholder>
-                    <ItemContent>
+                @if (_links == null)
+                {
+                    <p>Загружаю&hellip;</p>
+                }
+                else
+                {
+                    foreach (var link in _links)
+                    {
                         <ShortLinkItem Link="@link" OnCopy="CopyToClipboard"/>
-                    </ItemContent>
-                    <EmptyContent>
-                        <p>
-                            Кажется, у вас пока нет ссылок.
-                        </p>
-                    </EmptyContent>
-                </Virtualize>
+                    }
+                }
+                @* <Virtualize Items="_links" Context="link"> *@
+                @*     <Placeholder> *@
+                @*         <p> *@
+                @*             Загружаю&hellip; *@
+                @*         </p> *@
+                @*     </Placeholder> *@
+                @*     <ItemContent> *@
+                @*         <ShortLinkItem Link="@link" OnCopy="CopyToClipboard"/> *@
+                @*     </ItemContent> *@
+                @*     <EmptyContent> *@
+                @*         <p> *@
+                @*             Кажется, у вас пока нет ссылок. *@
+                @*         </p> *@
+                @*     </EmptyContent> *@
+                @* </Virtualize> *@
             </div>
         </div>
     </div>
@@ -79,19 +92,6 @@
     List<ShortLink>? _links = [];
     int _page = 1;
     int _perPage = 10;
-    private ApplicationUser? _user;
-    private ShortLink? shortlink;
-
-    public enum Expiration
-    {
-        Never,
-        SixHours,
-        OneDay,
-        OneWeek,
-        OneMonth,
-        SixMonths,
-        OneYear
-    }
 
     public class ShortLinkFormModel
     {
@@ -108,17 +108,16 @@
         public Expiration? Expiration { get; set; }
     }
 
-    [CascadingParameter] private Task<AuthenticationState>? AuthState { get; set; }
-    private CreateShortLinkResponse? ResultModel { get; set; }
+    [CascadingParameter] public ApplicationUser? User { get; set; }
+
+    [CascadingParameter] private HttpContext HttpContext { get; set; } = null!;
+
     private bool Loading { get; set; }
 
     protected override async Task OnInitializedAsync()
-    {
-        if (AuthState == null) return;
-        var authState = await AuthState;
-        _user = await ShortLinkService.GetCurrentUserAsync(authState.User);
-        if (_user == null) return;
-
+    { 
+        Logger.LogWarning("OnInitializedAsync called");
+        // await Task.Delay(100);
         await LoadShortLinks();
     }
 
@@ -128,7 +127,9 @@
         {
             Loading = true;
             await Task.Delay(1);
-            _links = await ShortLinkService.GetLinksAsync(_page, _perPage, _user);
+
+            _links = await ShortLinkService.GetLinksAsync(_page, _perPage, User).ConfigureAwait(false);
+            Logger.LogInformation("Loaded {0} links", _links.Count);
         }
         catch (Exception ex)
         {
@@ -167,7 +168,7 @@
                 ExpiresAt = expiredAt
             };
 
-            shortlink = await ShortLinkService.CreateShortLinkAsync(createRequest, _user);
+            await ShortLinkService.CreateShortLinkAsync(createRequest, User);
             await JsRuntime.InvokeVoidAsync("closeCreateForm");
             ToastService.ShowSuccess("Ссылка создана");
 

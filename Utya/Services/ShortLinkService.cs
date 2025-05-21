@@ -111,11 +111,11 @@ public class ShortLinkService(
     {
         return await context.ShortLinks
             .AsNoTracking()
-            .Where(l => l.User != null && l.User == user)
+            .Where(l => l.User == user)
+            .OrderByDescending(l => l.CreatedAt)
             .Include(s => s.Clicks)
             .Skip((page - 1) * perPage)
             .Take(perPage)
-            .OrderByDescending(l => l.CreatedAt)
             .ToListAsync();
     }
 }

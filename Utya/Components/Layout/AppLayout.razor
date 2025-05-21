@@ -1,10 +1,13 @@
-@using System.Security.Cryptography
-@using System.Text
 @using Microsoft.AspNetCore.Components.Sections
+@using Utya.Components.Account
+@using Utya.Data
+@using Utya.Services
 @implements IDisposable
 
 @inherits LayoutComponentBase
 
+@inject IdentityUserAccessor UserAccessor
+@inject ILimitService LimitService
 @inject NavigationManager NavigationManager
 
 <div class="drawer lg:drawer-open overflow-hidden">
@@ -22,16 +25,22 @@
       </div>
     </div>
 
-    <main class="page flex flex-grow">
-      @Body
-    </main>
+    @if (User != null)
+    {
+      <CascadingValue Value="User">
+        <main class="page flex flex-grow">
+          @Body
+        </main>
+      </CascadingValue>
+    }
   </div>
 
   <div class="drawer-side overflow-y-scroll">
     <label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
     <div class="bg-base-300 text-base-content min-h-full w-60 flex flex-col">
-
-      <AppDrawer/>
+      <CascadingValue Value="Limits">
+        <AppDrawer/>
+      </CascadingValue>
     </div>
   </div>
 </div>
@@ -64,11 +73,18 @@
 @code
 {
   private string? _currentUrl;
+  private LimitStatus? Limits { get; set; }
+  private ApplicationUser? User { get; set; }
 
-  protected override void OnInitialized()
+  [CascadingParameter] private HttpContext HttpContext { get; set; } = null!;
+
+  protected override async Task OnInitializedAsync()
   {
     _currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);
     NavigationManager.LocationChanged += OnLocationChanged;
+
+    User = await UserAccessor.GetRequiredUserAsync(HttpContext);
+    Limits = await LimitService.GetCurrentLimitsAsync(User.Id);
   }
 
   private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
@@ -80,24 +96,5 @@
   public void Dispose()
   {
     NavigationManager.LocationChanged -= OnLocationChanged;
-  }
-
-  private static string GetGravatarUrl(string email)
-  {
-    // Normalize the email address: trim and convert to lowercase
-    email = email.Trim().ToLower();
-
-    using var sha256 = SHA256.Create();
-    var emailBytes = Encoding.UTF8.GetBytes(email);
-
-    var sb = new StringBuilder();
-    foreach (var b in sha256.ComputeHash(emailBytes))
-    {
-      sb.Append(b.ToString("x2"));
-    }
-
-    var gravatarUrl = $"https://www.gravatar.com/avatar/{sb}?s=64&d=initials&name={email}";
-
-    return gravatarUrl;
   }
 }
