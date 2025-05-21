@@ -1,5 +1,8 @@
 @page "/App/Links"
+@rendermode InteractiveServer
+
 @using System.ComponentModel.DataAnnotations
+@using Blazored.Toast.Configuration
 @using Microsoft.AspNetCore.Components.Sections
 @using Utya.Data
 @using Utya.Models
@@ -7,8 +10,8 @@
 
 @inject ILogger<Links> Logger
 @inject IJSRuntime JsRuntime
+@inject IToastService ToastService
 @inject ShortLinkService ShortLinkService
-@rendermode InteractiveServer
 
 @attribute [StreamRendering]
 
@@ -23,6 +26,9 @@
     </label>
 </SectionContent>
 
+<BlazoredToasts Position="ToastPosition.TopCenter" IconType="IconType.FontAwesome"
+                SuccessClass="text-success" ErrorClass="text-error"/>
+
 <div class="drawer drawer-end">
     <input id="create-link-drawer" type="checkbox" class="drawer-toggle"/>
     <div class="drawer-content">
@@ -35,7 +41,7 @@
                         </p>
                     </Placeholder>
                     <ItemContent>
-                        <ShortLinkItem Link="@link"/>
+                        <ShortLinkItem Link="@link" OnCopy="CopyToClipboard"/>
                     </ItemContent>
                     <EmptyContent>
                         <p>
@@ -51,7 +57,8 @@
 
         <div class="flex flex-col flex-grow w-1/2 max-w-[480px] bg-base-100 h-screen shadow-lg">
             <div class="flex px-4 navbar menu-horizontal align-center gap-2">
-                <label id="create-form-label" for="create-link-drawer" aria-label="close sidebar" class="btn btn-square btn-soft rounded-lg">
+                <label id="create-form-label" for="create-link-drawer" aria-label="close sidebar"
+                       class="btn btn-square btn-soft rounded-lg">
                     <i class="fas fa-arrow-right-from-bracket"></i>
                 </label>
                 <h3 class="text-2xl">Создать ссылку</h3>
@@ -63,9 +70,9 @@
 </div>
 
 <script>
-  function closeCreateForm() {
-    document.getElementById('create-form-label').click();
-  }
+    function closeCreateForm() {
+        document.getElementById('create-form-label').click();
+    }
 </script>
 
 @code {
@@ -101,8 +108,7 @@
         public Expiration? Expiration { get; set; }
     }
 
-    [CascadingParameter]
-    private Task<AuthenticationState>? AuthState { get; set; }
+    [CascadingParameter] private Task<AuthenticationState>? AuthState { get; set; }
     private CreateShortLinkResponse? ResultModel { get; set; }
     private bool Loading { get; set; }
 
@@ -112,7 +118,7 @@
         var authState = await AuthState;
         _user = await ShortLinkService.GetCurrentUserAsync(authState.User);
         if (_user == null) return;
-        
+
         await LoadShortLinks();
     }
 
@@ -163,13 +169,28 @@
 
             shortlink = await ShortLinkService.CreateShortLinkAsync(createRequest, _user);
             await JsRuntime.InvokeVoidAsync("closeCreateForm");
-            
-            await LoadShortLinks();
+            ToastService.ShowSuccess("Ссылка создана");
 
+            await LoadShortLinks();
         }
         finally
         {
             Loading = false;
+        }
+    }
+
+    private async Task CopyToClipboard(string url)
+    {
+        try
+        {
+            await JsRuntime.InvokeAsync<string>("navigator.clipboard.writeText", url);
+            ToastService.ShowSuccess("Ссылка скопирована в буфер обмена");
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            ToastService.ShowError("Не удалось скопировать ссылку в буфер обмена");
+            throw;
         }
     }
 

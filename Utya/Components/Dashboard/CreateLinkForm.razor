@@ -67,7 +67,8 @@
 
     private async Task _OnSubmit()
     {
+        Console.WriteLine("Pick me!");
         await OnSubmit.InvokeAsync(Model);
+        Model = new Links.ShortLinkFormModel();
     }
-
 }
