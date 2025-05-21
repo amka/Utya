@@ -3,10 +3,11 @@
 @using Microsoft.AspNetCore.Components.Sections
 @using Utya.Data
 @using Utya.Models
+@using Utya.Services
 
 @inject ILogger<Links> Logger
-@inject NavigationManager NavigationManager
-@inject HttpClient HttpClient
+@inject IJSRuntime JsRuntime
+@inject ShortLinkService ShortLinkService
 @rendermode InteractiveServer
 
 @attribute [StreamRendering]
@@ -50,7 +51,7 @@
 
         <div class="flex flex-col flex-grow w-1/2 max-w-[480px] bg-base-100 h-screen shadow-lg">
             <div class="flex px-4 navbar menu-horizontal align-center gap-2">
-                <label for="create-link-drawer" aria-label="close sidebar" class="btn btn-square btn-soft rounded-lg">
+                <label id="create-form-label" for="create-link-drawer" aria-label="close sidebar" class="btn btn-square btn-soft rounded-lg">
                     <i class="fas fa-arrow-right-from-bracket"></i>
                 </label>
                 <h3 class="text-2xl">Создать ссылку</h3>
@@ -61,10 +62,18 @@
     </div>
 </div>
 
+<script>
+  function closeCreateForm() {
+    document.getElementById('create-form-label').click();
+  }
+</script>
+
 @code {
     List<ShortLink>? _links = [];
     int _page = 1;
     int _perPage = 10;
+    private ApplicationUser? _user;
+    private ShortLink? shortlink;
 
     public enum Expiration
     {
@@ -92,17 +101,28 @@
         public Expiration? Expiration { get; set; }
     }
 
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
     private CreateShortLinkResponse? ResultModel { get; set; }
     private bool Loading { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        HttpClient.BaseAddress = new Uri(NavigationManager.BaseUri);
+        if (AuthState == null) return;
+        var authState = await AuthState;
+        _user = await ShortLinkService.GetCurrentUserAsync(authState.User);
+        if (_user == null) return;
+        
+        await LoadShortLinks();
+    }
+
+    private async Task LoadShortLinks()
+    {
         try
         {
             Loading = true;
             await Task.Delay(1);
-            _links = await HttpClient.GetFromJsonAsync<List<ShortLink>>($"api/v1/links?page={_page}&perPage={_perPage}");
+            _links = await ShortLinkService.GetLinksAsync(_page, _perPage, _user);
         }
         catch (Exception ex)
         {
@@ -138,13 +158,14 @@
             {
                 CustomAlias = model.CustomAlias,
                 Password = model.Password,
-                ExpiresAt = expiredAt,
+                ExpiresAt = expiredAt
             };
-            var response = await HttpClient.PostAsJsonAsync("api/v1/links", createRequest);
-            if (response.IsSuccessStatusCode)
-            {
-                ResultModel = await response.Content.ReadFromJsonAsync<CreateShortLinkResponse>();
-            }
+
+            shortlink = await ShortLinkService.CreateShortLinkAsync(createRequest, _user);
+            await JsRuntime.InvokeVoidAsync("closeCreateForm");
+            
+            await LoadShortLinks();
+
         }
         finally
         {

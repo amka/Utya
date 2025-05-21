@@ -107,7 +107,7 @@ public class ShortLinkService(
         await context.SaveChangesAsync();
     }
 
-    public async Task<List<ShortLink>> GetLinksAsync(int page, int perPage, ApplicationUser user)
+    public async Task<List<ShortLink>> GetLinksAsync(int page, int perPage, ApplicationUser? user)
     {
         return await context.ShortLinks
             .AsNoTracking()
@@ -115,6 +115,7 @@ public class ShortLinkService(
             .Include(s => s.Clicks)
             .Skip((page - 1) * perPage)
             .Take(perPage)
+            .OrderByDescending(l => l.CreatedAt)
             .ToListAsync();
     }
 }
