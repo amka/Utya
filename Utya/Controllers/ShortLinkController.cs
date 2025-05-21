@@ -2,7 +2,7 @@ using System.Drawing;
 using System.Text;
 using QRCoder;
 using Utya.Data;
-using Utya.Models;
+using Utya.Shared.Models;
 using Utya.Services;
 
 namespace Utya.Controllers;

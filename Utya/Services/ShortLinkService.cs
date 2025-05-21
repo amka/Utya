@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NanoidDotNet;
 using Utya.Data;
-using Utya.Models;
+using Utya.Shared.Models;
 
 namespace Utya.Services;
 

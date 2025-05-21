@@ -1,4 +1,6 @@
-@rendermode InteractiveServer
+@namespace Utya.Client.Components.Dashboard
+@using Utya.Shared.Models // Added for ShortLinkFormModel and ShortLinkExpiration
+@rendermode InteractiveWebAssembly // Changed rendermode
 
 <EditForm Enhance="true" Model="@Model" class="flex flex-col flex-grow px-4"
           OnValidSubmit="_OnSubmit"
@@ -29,13 +31,13 @@
         <legend class="fieldset-legend">Expiration</legend>
         <InputSelect @bind-Value="Model!.Expiration" class="select w-full rounded-lg bg-base-100 text-base-content"
                      disabled="@Loading">
-            <option value="@Links.Expiration.Never">Никогда</option>
-            <option value="@Links.Expiration.SixHours">6 часов</option>
-            <option value="@Links.Expiration.OneDay">1 день</option>
-            <option value="@Links.Expiration.OneWeek">1 неделя</option>
-            <option value="@Links.Expiration.OneMonth">1 месяц</option>
-            <option value="@Links.Expiration.SixMonths">6 месяцев</option>
-            <option value="@Links.Expiration.OneYear">1 год</option>
+            <option value="@ShortLinkExpiration.Never">Никогда</option> 
+            <option value="@ShortLinkExpiration.SixHours">6 часов</option>
+            <option value="@ShortLinkExpiration.OneDay">1 день</option>
+            <option value="@ShortLinkExpiration.OneWeek">1 неделя</option>
+            <option value="@ShortLinkExpiration.OneMonth">1 месяц</option>
+            <option value="@ShortLinkExpiration.SixMonths">6 месяцев</option>
+            <option value="@ShortLinkExpiration.OneYear">1 год</option>
         </InputSelect>
         <ValidationMessage For="() => Model!.Expiration"/>
     </fieldset>
@@ -55,14 +57,14 @@
 </EditForm>
 
 @code {
-    [SupplyParameterFromForm] private Links.ShortLinkFormModel? Model { get; set; }
+    [SupplyParameterFromForm] private ShortLinkFormModel? Model { get; set; } // Changed Links.ShortLinkFormModel to ShortLinkFormModel
 
     [Parameter] public bool Loading { get; set; } = false;
-    [Parameter] public EventCallback<Links.ShortLinkFormModel> OnSubmit { get; set; }
+    [Parameter] public EventCallback<ShortLinkFormModel> OnSubmit { get; set; } // Changed Links.ShortLinkFormModel to ShortLinkFormModel
 
     protected override void OnInitialized()
     {
-        Model = new Links.ShortLinkFormModel();
+        Model = new ShortLinkFormModel(); // Changed Links.ShortLinkFormModel to ShortLinkFormModel
     }
 
     private async Task _OnSubmit()

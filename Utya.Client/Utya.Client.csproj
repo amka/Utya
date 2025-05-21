@@ -19,4 +19,8 @@
     <_ContentIncludedByDefault Remove="Pages\Dashboard\Links.razor" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Utya.Shared\Utya.Shared.csproj" />
+  </ItemGroup>
+
 </Project>

@@ -1,15 +1,16 @@
+@layout Utya.Components.Layout.AppLayout // Added layout directive
+@namespace Utya.Client.Components.Dashboard
 @page "/App/Links"
 @using System.ComponentModel.DataAnnotations
 @using Microsoft.AspNetCore.Components.Sections
 @using Utya.Data
-@using Utya.Models
+@using Utya.Shared.Models
 
 @inject ILogger<Links> Logger
 @inject NavigationManager NavigationManager
 @inject HttpClient HttpClient
-@rendermode InteractiveServer
-
-@attribute [StreamRendering]
+@rendermode InteractiveWebAssembly // Changed rendermode
+ // Removed @attribute [StreamRendering]
 
 <PageTitle>Ссылки</PageTitle>
 
@@ -66,32 +67,6 @@
     int _page = 1;
     int _perPage = 10;
 
-    public enum Expiration
-    {
-        Never,
-        SixHours,
-        OneDay,
-        OneWeek,
-        OneMonth,
-        SixMonths,
-        OneYear
-    }
-
-    public class ShortLinkFormModel
-    {
-        [Required]
-        [StringLength(2000, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
-        [Url(ErrorMessage = "{0} is not a valid URL")]
-        public string? Url { get; set; }
-
-        [StringLength(32, ErrorMessage = "The {0} must be at least {2} and at max {1} characters long.", MinimumLength = 3)]
-        public string? Password { get; set; }
-
-        public string? CustomAlias { get; set; }
-
-        public Expiration? Expiration { get; set; }
-    }
-
     private CreateShortLinkResponse? ResultModel { get; set; }
     private bool Loading { get; set; }
 
@@ -125,12 +100,12 @@
             // Calculate expiration datetime based on Expiration select
             var expiredAt = DateTime.UtcNow + model.Expiration switch
             {
-                Expiration.SixHours => TimeSpan.FromHours(6),
-                Expiration.OneDay => TimeSpan.FromDays(1),
-                Expiration.OneWeek => TimeSpan.FromDays(7),
-                Expiration.OneMonth => TimeSpan.FromDays(30),
-                Expiration.SixMonths => TimeSpan.FromDays(180),
-                Expiration.OneYear => TimeSpan.FromDays(365),
+                ShortLinkExpiration.SixHours => TimeSpan.FromHours(6), // Changed Expiration to ShortLinkExpiration
+                ShortLinkExpiration.OneDay => TimeSpan.FromDays(1),   // Changed Expiration to ShortLinkExpiration
+                ShortLinkExpiration.OneWeek => TimeSpan.FromDays(7),  // Changed Expiration to ShortLinkExpiration
+                ShortLinkExpiration.OneMonth => TimeSpan.FromDays(30), // Changed Expiration to ShortLinkExpiration
+                ShortLinkExpiration.SixMonths => TimeSpan.FromDays(180),// Changed Expiration to ShortLinkExpiration
+                ShortLinkExpiration.OneYear => TimeSpan.FromDays(365), // Changed Expiration to ShortLinkExpiration
                 _ => null,
             };
 

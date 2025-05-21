@@ -8,6 +8,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Utya.Client", "Utya.Client\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utya.Tests", "Utya.Tests\Utya.Tests.csproj", "{B1435A0F-0256-47E0-BCE5-E1AC611A086C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Utya.Shared", "Utya.Shared\Utya.Shared.csproj", "{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -54,6 +56,18 @@ Global
 		{B1435A0F-0256-47E0-BCE5-E1AC611A086C}.Release|x64.Build.0 = Release|Any CPU
 		{B1435A0F-0256-47E0-BCE5-E1AC611A086C}.Release|x86.ActiveCfg = Release|Any CPU
 		{B1435A0F-0256-47E0-BCE5-E1AC611A086C}.Release|x86.Build.0 = Release|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Debug|x64.Build.0 = Debug|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Debug|x86.Build.0 = Debug|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Release|x64.ActiveCfg = Release|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Release|x64.Build.0 = Release|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Release|x86.ActiveCfg = Release|Any CPU
+		{353734E4-8DE5-4B8F-806F-440D0E7B3DF0}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
