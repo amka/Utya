@@ -6,8 +6,8 @@
 @using Microsoft.AspNetCore.Components.Sections
 @using Utya.Components.Account
 @using Utya.Data
-@using Utya.Models
 @using Utya.Services
+@using Utya.Shared.Models
 
 @inject ILogger<Links> Logger
 @inject IJSRuntime JsRuntime
@@ -128,7 +128,7 @@
             Loading = true;
             await Task.Delay(1);
 
-            _links = await ShortLinkService.GetLinksAsync(_page, _perPage, User).ConfigureAwait(false);
+            _links = await ShortLinkService.GetShortLinksAsync(_page, _perPage, User).ConfigureAwait(false);
             Logger.LogInformation("Loaded {0} links", _links.Count);
         }
         catch (Exception ex)

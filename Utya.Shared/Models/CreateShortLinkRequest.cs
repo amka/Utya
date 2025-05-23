@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace Utya.Models;
+namespace Utya.Shared.Models;
 
 public record CreateShortLinkRequest(
     [Required] [Url] string OriginalUrl,

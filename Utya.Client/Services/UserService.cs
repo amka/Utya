@@ -5,14 +5,14 @@ using Utya.Shared.Services;
 
 namespace Utya.Client.Services;
 
-public class UserService(IHttpClientFactory ClientFactory, AuthenticationStateProvider authenticationStateAsync)
+public class UserService(IHttpClientFactory clientFactory, AuthenticationStateProvider authenticationStateAsync)
     : IUserService
 {
     public async Task<Profile?> GetProfileAsync(string userId)
     {
         try
         {
-            var client = ClientFactory.CreateClient("Utya.ServerAPI");
+            var client = clientFactory.CreateClient("Utya.ServerAPI");
             return await client.GetFromJsonAsync<Profile>("api/v1/Account/profile");
         }
         catch (Exception e)

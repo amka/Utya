@@ -2,8 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Utya.Data;
-using Utya.Models;
 using Utya.Services;
+using Utya.Shared.Models;
 
 namespace Utya.Controllers;
 

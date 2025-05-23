@@ -4,8 +4,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Utya.Data;
-using Utya.Models;
 using Utya.Services;
+using Utya.Shared.Models;
 
 namespace Utya.Tests;
 

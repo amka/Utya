@@ -21,9 +21,21 @@
             </div>
         </div>
 
-        <main class="page flex flex-grow">
-            @Body
-        </main>
+        @if (_isLoading)
+        {
+            <div class="flex flex-grow justify-center items-center">
+                <span class="loading loading-ring loading-xl"></span>
+                <span class="text-lg">Загружаю...</span>
+            </div>
+        }
+        else
+        {
+            <CascadingValue Value="@Profile">
+                <main class="page flex flex-grow">
+                    @Body
+                </main>
+            </CascadingValue>
+        }
     </div>
 
     <div class="drawer-side overflow-y-hidden">

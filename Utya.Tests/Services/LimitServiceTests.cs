@@ -2,7 +2,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
 using Utya.Data;
-using Utya.Models;
 using Utya.Services;
 using Xunit;
 using Microsoft.AspNetCore.Identity;

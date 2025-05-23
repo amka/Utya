@@ -44,7 +44,7 @@ builder.Services.AddHttpClient<GeoIpService>(client =>
     client.DefaultRequestHeaders.Add("User-Agent", "ShortLinker/1.0");
 });
 
-builder.Services.AddScoped<ShortLinkService>();
+builder.Services.AddScoped<IShortLinkService, ShortLinkService>();
 builder.Services.AddScoped<ILimitService, LimitService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IGeoLocator, GeoIpService>();

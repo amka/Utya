@@ -1,9 +1,11 @@
 using System.Drawing;
 using System.Text;
+using Microsoft.AspNetCore.Identity;
 using QRCoder;
 using Utya.Data;
-using Utya.Models;
 using Utya.Services;
+using Utya.Shared.Models;
+using Utya.Shared.Services;
 
 namespace Utya.Controllers;
 
@@ -13,22 +15,13 @@ using Microsoft.AspNetCore.Authorization;
 
 [ApiController]
 [Route("api/v1/links")]
-public class ShortLinkController : ControllerBase
+public class ShortLinkController(
+    IShortLinkService shortLinkService,
+    UserManager<ApplicationUser> userManager,
+    ILogger<ShortLinkController> logger,
+    IWebHostEnvironment env)
+    : ControllerBase
 {
-    private readonly ShortLinkService _shortLinkService;
-    private readonly ILogger<ShortLinkController> _logger;
-    private readonly IWebHostEnvironment _env;
-
-    public ShortLinkController(
-        ShortLinkService shortLinkService,
-        ILogger<ShortLinkController> logger,
-        IWebHostEnvironment env)
-    {
-        _shortLinkService = shortLinkService;
-        _logger = logger;
-        _env = env;
-    }
-
     [HttpPost]
     [ProducesResponseType(typeof(CreateShortLinkResponse), 201)]
     [ProducesResponseType(400)]
@@ -44,10 +37,13 @@ public class ShortLinkController : ControllerBase
             }
 
             var user = User.Identity is { IsAuthenticated: true }
-                ? await _shortLinkService.GetCurrentUserAsync(User)
+                ? await userManager.GetUserAsync(User)
                 : null;
 
-            var shortLink = await _shortLinkService.CreateShortLinkAsync(request, user);
+            if (user == null) return Unauthorized();
+
+
+            var shortLink = await shortLinkService.CreateShortLinkAsync(request, user.Id);
 
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             var response = new CreateShortLinkResponse(
@@ -63,19 +59,19 @@ public class ShortLinkController : ControllerBase
         }
         catch (ArgumentException ex)
         {
-            _logger.LogWarning(ex, "Ошибка создания ссылки");
+            logger.LogWarning(ex, "Ошибка создания ссылки");
             return Conflict(new { Error = ex.Message });
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Ошибка при создании ссылки");
+            logger.LogError(ex, "Ошибка при создании ссылки");
             return StatusCode(500, new { Error = "Внутренняя ошибка сервера" });
         }
     }
 
     private string? GenerateQrCodeAsync(string url)
     {
-        if (!_env.IsDevelopment()) return null;
+        if (!env.IsDevelopment()) return null;
 
         // Генерируем QR только в development
         using var qrGenerator = new QRCodeGenerator();
@@ -90,22 +86,22 @@ public class ShortLinkController : ControllerBase
     [ProducesResponseType(404)]
     public async Task<IActionResult> GetLink(Guid id)
     {
-        var link = await _shortLinkService.GetLinkAsync(id);
+        var link = await shortLinkService.GetLinkAsync(id);
         return link != null ? Ok(link) : NotFound();
     }
-    
+
     [HttpGet]
     [Authorize]
     [ProducesResponseType(typeof(List<ShortLink>), 200)]
-    public async Task<IActionResult> GetLinks([FromQuery]int page, [FromQuery]int perPage, [FromQuery]string? search)
+    public async Task<IActionResult> GetLinks([FromQuery] int page, [FromQuery] int perPage, [FromQuery] string? search)
     {
         var user = User.Identity is { IsAuthenticated: true }
-            ? await _shortLinkService.GetCurrentUserAsync(User)
+            ? await userManager.GetUserAsync(User)
             : null;
 
         if (user == null) return Unauthorized();
-        
-        var links = await _shortLinkService.GetLinksAsync(page, perPage, user);
+
+        var links = await shortLinkService.GetLinksAsync(page, perPage, user.Id);
         return Ok(links);
     }
 }

@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using NanoidDotNet;
 using Utya.Data;
-using Utya.Models;
+using Utya.Shared.Models;
+using Utya.Shared.Services;
 
 namespace Utya.Services;
 
@@ -14,7 +15,7 @@ public class ShortLinkService(
     IGeoLocator geoLocator,
     ILogger<ShortLinkService> logger,
     UserManager<ApplicationUser> userManager,
-    ILimitService limitService)
+    ILimitService limitService) : IShortLinkService
 {
     public async Task<ShortLink> CreateShortLinkAsync(
         CreateShortLinkRequest request,
@@ -62,6 +63,47 @@ public class ShortLinkService(
 
         return shortLink;
     }
+
+    public Task<ShortLinkDto> CreateShortLinkAsync(CreateShortLinkRequest request, string userId)
+    {
+        throw new NotImplementedException();
+    }
+
+    async Task<ShortLinkDto?> IShortLinkService.GetLinkAsync(Guid id)
+    {
+        var link = await GetLinkAsync(id);
+        if (link == null) return null;
+
+        return new ShortLinkDto
+        {
+            Id = link.Id,
+            ShortCode = link.ShortCode,
+            OriginalUrl = link.OriginalUrl,
+            CreatedAt = link.CreatedAt,
+            ExpiresAt = link.ExpiresAt,
+        };
+    }
+
+    public async Task<List<ShortLinkDto>> GetLinksAsync(int page, int perPage, string user)
+    {
+        var links = await context.ShortLinks
+            .AsNoTracking()
+            .Where(l => l.UserId == user)
+            .OrderByDescending(l => l.CreatedAt)
+            .Include(s => s.Clicks)
+            .Skip((page - 1) * perPage)
+            .Take(perPage)
+            .ToListAsync();
+        return links.Select(l => new ShortLinkDto
+        {
+            Id = l.Id,
+            ShortCode = l.ShortCode,
+            OriginalUrl = l.OriginalUrl,
+            CreatedAt = l.CreatedAt,
+            ExpiresAt = l.ExpiresAt,
+        }).ToList();
+    }
+
 
     public async Task<ShortLink?> GetLinkAsync(Guid id)
     {
@@ -120,7 +162,7 @@ public class ShortLinkService(
         await context.SaveChangesAsync();
     }
 
-    public async Task<List<ShortLink>> GetLinksAsync(int page, int perPage, ApplicationUser? user)
+    public async Task<List<ShortLink>> GetShortLinksAsync(int page, int perPage, ApplicationUser? user)
     {
         return await context.ShortLinks
             .AsNoTracking()

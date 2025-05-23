@@ -35,6 +35,7 @@ public class UserService(
         if (user == null) return null;
         return new Profile()
         {
+            Id = user.Id,
             UserName = user.UserName,
             Email = user.Email,
             Limits = await limitService.GetCurrentLimitsAsync(user.Id)
