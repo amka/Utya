@@ -1,5 +1,7 @@
 @using System.Security.Cryptography
 @using System.Text
+@using Utya.Services
+@using Utya.Shared.Models
 @implements IDisposable
 
 @inject NavigationManager NavigationManager
@@ -49,35 +51,39 @@
   </li>
 </ul>
 
-<div class="card bg-base-100 shadow-sm m-2">
-  <div class="card-body" style="padding: 0.75rem;">
-    <div class="card-title">
-      Free Usage
-    </div>
-    <div>
-      <div class="flex justify-between">
-        <h4>Ссылки</h4>
-        <span>
-          <span class="font-bold">10</span>
-          /
-          <span class="">100</span>
-        </span>
+@if (Limits != null)
+{
+
+  <div class="card bg-base-100 shadow-sm m-2">
+    <div class="card-body" style="padding: 0.75rem;">
+      <div class="card-title">
+        @Limits.PlanName
       </div>
-      <progress class="progress progress-primary w-full" value="10" max="100"></progress>
-    </div>
-    <div>
-      <div class="flex justify-between">
-        <h4>Переходы</h4>
-        <span>
-          <span class="font-bold">3791</span>
-          /
-          <span class="">10000</span>
-        </span>
+      <div>
+        <div class="flex justify-between">
+          <h4>Ссылки</h4>
+          <span>
+            <span class="font-bold">@Limits.LinksUsed</span>
+            /
+            <span class="">@Limits.LinksLimit</span>
+          </span>
+        </div>
+        <progress class="progress progress-primary w-full" value="@Limits.LinksUsed" max="@Limits.LinksLimit"></progress>
       </div>
-      <progress class="progress progress-primary w-full" value="3791" max="10000"></progress>
+      <div>
+        <div class="flex justify-between">
+          <h4>Переходы</h4>
+          <span>
+            <span class="font-bold">@Limits.ClicksUsed</span>
+            /
+            <span class="">@Limits.ClicksLimit</span>
+          </span>
+        </div>
+        <progress class="progress progress-primary w-full" value="@Limits.ClicksUsed" max="@Limits.ClicksLimit"></progress>
+      </div>
     </div>
   </div>
-</div>
+}
 
 <div class="p-2">
   <AuthorizeView>
@@ -117,6 +123,11 @@
 @code {
   private string? _currentUrl;
 
+  [CascadingParameter] public LimitStatus? Limits { get; set; }
+
+  [CascadingParameter]
+  private HttpContext HttpContext { get; set; } = null!;
+  
   protected override void OnInitialized()
   {
     _currentUrl = NavigationManager.ToBaseRelativePath(NavigationManager.Uri);

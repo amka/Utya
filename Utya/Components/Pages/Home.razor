@@ -1,15 +1,15 @@
 ﻿@page "/"
 @using System.ComponentModel.DataAnnotations
 @using Blazored.Toast.Configuration
-@using Utya.Models
+@using Utya.Shared.Models
 
 @rendermode InteractiveServer
 
 @inject NavigationManager NavigationManager
 @inject ILogger<Home> Logger
 @inject HttpClient HttpClient
-@inject IJSRuntime JSRuntime
-@inject IToastService toastService
+@inject IJSRuntime JsRuntime
+@inject IToastService ToastService
 
 <PageTitle>Home</PageTitle>
 
@@ -569,13 +569,13 @@
     {
         try
         {
-            await JSRuntime.InvokeAsync<string>("navigator.clipboard.writeText", ResultModel?.ShortUrl);
-            toastService.ShowSuccess("Ссылка скопирована в буфер обмена");
+            await JsRuntime.InvokeAsync<string>("navigator.clipboard.writeText", ResultModel?.ShortUrl);
+            ToastService.ShowSuccess("Ссылка скопирована в буфер обмена");
         }
         catch (Exception e)
         {
             Console.WriteLine(e);
-            toastService.ShowError("Не удалось скопировать ссылку в буфер обмена");
+            ToastService.ShowError("Не удалось скопировать ссылку в буфер обмена");
             throw;
         }
     }

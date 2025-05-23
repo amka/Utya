@@ -1,6 +1,6 @@
 using System.Threading.Channels;
 using Utya.Data;
-using Utya.Models;
+using Utya.Shared.Models;
 
 namespace Utya.Services;
 

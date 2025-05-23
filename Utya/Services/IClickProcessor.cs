@@ -1,4 +1,4 @@
-using Utya.Models;
+using Utya.Shared.Models;
 
 namespace Utya.Services;
 

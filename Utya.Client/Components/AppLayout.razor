@@ -1,0 +1,75 @@
+@inherits LayoutComponentBase
+
+@using Utya.Shared.Models
+@using Utya.Shared.Services
+@using Microsoft.AspNetCore.Components.Sections
+@inject IUserService UserService
+
+<div class="drawer lg:drawer-open">
+    <input id="app-drawer" type="checkbox" class="drawer-toggle"/>
+
+    <div class="drawer-content overflow-y-scroll">
+
+        <div class="navbar px-4 w-full gap-2">
+            <div class="flex flex-1 items-center gap-2">
+                <label for="app-drawer" class="btn btn-square btn-ghost drawer-button lg:hidden">
+                    <i class="fas fa-bars"></i>
+                </label>
+                <div class="flex justify-between flex-grow">
+                    <SectionOutlet SectionName="top-bar"/>
+                </div>
+            </div>
+        </div>
+
+        @if (_isLoading)
+        {
+            <div class="flex flex-grow justify-center items-center">
+                <span class="loading loading-ring loading-xl"></span>
+                <span class="text-lg">Загружаю...</span>
+            </div>
+        }
+        else
+        {
+            <CascadingValue Value="@Profile">
+                <main class="page flex flex-grow">
+                    @Body
+                </main>
+            </CascadingValue>
+        }
+    </div>
+
+    <div class="drawer-side overflow-y-hidden">
+        <label for="app-drawer" aria-label="close sidebar" class="drawer-overlay"></label>
+        <div class="bg-base-300 text-base-content min-h-full w-60 flex flex-col">
+
+            <AppDrawer Profile="@Profile"/>
+
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter] private Task<AuthenticationState> authState { get; set; }
+
+    private bool _isLoading = true;
+    private Profile? Profile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        await Task.Delay(1);
+
+        try
+        {
+            var userId = await UserService.GetCurrentUserId();
+            if (userId == null) return;
+            Profile = await UserService.GetProfileAsync(userId);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+}

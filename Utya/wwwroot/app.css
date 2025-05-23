@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @plugin "daisyui" {
     themes: light --default, halloween --prefersdark;
+    exclude: rootscrollgutter;
 }
 
 html, body {

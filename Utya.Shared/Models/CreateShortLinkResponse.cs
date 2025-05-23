@@ -1,4 +1,4 @@
-namespace Utya.Models;
+namespace Utya.Shared.Models;
 
 public record CreateShortLinkResponse(
     Guid Id,

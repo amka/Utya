@@ -1,0 +1,70 @@
+@rendermode InteractiveAuto
+
+<div class="navbar flex px-4 w-full items-start">
+    <NavLink
+        class="text-2xl font-bold text-gradient active flex flex-row flex-nowrap items-center flex-shrink"
+        href="App"
+        Match="NavLinkMatch.All">
+                    <span class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                        <i class="text-xl">🪿</i>
+                    </span>
+        Utya App
+    </NavLink>
+
+</div>
+
+
+<ul class="menu flex-col w-full">
+    <li>
+        <NavLink href="App" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+            <i class="fas fa-chart-simple"></i>
+            Статистика
+        </NavLink>
+    </li>
+    <li>
+        <NavLink href="App/Links" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+            <i class="fas fa-link"></i>
+            Ссылки
+        </NavLink>
+    </li>
+</ul>
+
+
+<div class="flex flex-grow"></div>
+
+<LimitsCard Limits="@Profile?.Limits"/>
+
+<div class="p-2">
+    <AuthorizeView>
+        <Authorized>
+            <div class="dropdown  dropdown-top dropdown-center w-full">
+                <div tabindex="0" role="button" class="btn btn-soft btn-block rounded-lg justify-start avatar">
+                    <div class="w-6 rounded-full">
+                        <img width="36" height="36"
+                             alt="Tailwind CSS Navbar component"
+                             src="@Profile?.GravatarUrl?s=36"/>
+                    </div>
+                    <span class="font-bold truncate">@Profile?.UserName</span>
+                </div>
+                <ul
+                    tabindex="0"
+                    class="menu dropdown-content rounded-box bg-base-200 rounded-box mt-2 z-1 w-52 p-2 shadow-lg">
+                    <li>
+                        <a class="rounded-lg" href="Account/Manage">
+                            Профиль
+                        </a>
+                    </li>
+                    <li>
+                        <NavLink href="/Logout" class="rounded-lg cursor-pointer">
+                            Выйти
+                        </NavLink>
+                    </li>
+                </ul>
+            </div>
+        </Authorized>
+    </AuthorizeView>
+</div>
+
+@code {
+    [Parameter] public Profile? Profile { get; set; }
+}

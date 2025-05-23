@@ -1,4 +1,5 @@
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using NanoidDotNet;
 
 namespace Utya.Data;
@@ -28,6 +29,7 @@ public class ShortLink
     public bool IsActive { get; set; } = true;
 
     // Foreign keys
+    public string UserId { get; set; }
     public ApplicationUser? User { get; set; }
 
     // Navigation properties

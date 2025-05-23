@@ -1,0 +1,130 @@
+@page "/App/Links"
+@using Microsoft.AspNetCore.Components.Sections
+@rendermode InteractiveWebAssembly
+
+@inject IUserService UserService
+@inject IShortLinkService ShortLinkService
+
+@attribute [StreamRendering]
+
+
+<PageTitle>Ссылки</PageTitle>
+
+<SectionContent SectionName="top-bar">
+    <h3 class="text-2xl">Ссылки</h3>
+
+    <label for="create-link-drawer" class="btn btn-primary rounded-lg">
+        <i class="fas fa-plus"></i>
+        Создать ссылку
+    </label>
+</SectionContent>
+
+
+<div class="drawer drawer-end">
+    <input id="create-link-drawer" type="checkbox" class="drawer-toggle"/>
+    <div class="drawer-content">
+        <div class="flex flex-col">
+            <div class="p-4">
+                <div class="mb-4 sticky top-0">
+                        <div class="gap-2">
+                            <input
+                                type="text"
+                                placeholder="Поиск по URL..."
+                                class="input w-100 rounded-lg"
+                                @bind="_searchTerm"
+                                @oninput="OnSearchInput"
+                                @onkeyup="OnSearchEnter"
+                            />
+                            <button class="btn btn-square rounded-lg" @onclick="LoadLinks">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                </div>
+
+                @if (_links == null)
+                {
+                    <p>Загружаю&hellip;</p>
+                }
+                else if (!_links.Any())
+                {
+                    <div class="text-center p-8 text-gray-500">
+                        <i class="fas fa-inbox text-4xl mb-2"></i>
+                        <p>Ссылки не найдены</p>
+                    </div>
+                }
+                else
+                {
+                    foreach (var link in _links)
+                    {
+                        <ShortLinkItem Link="@link" OnCopy="() => { }"/>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="drawer-side">
+
+        <div class="flex flex-col flex-grow w-1/2 max-w-[480px] bg-base-100 h-screen shadow-lg">
+            <div class="flex px-4 navbar menu-horizontal align-center gap-2">
+                <label id="create-form-label" for="create-link-drawer" aria-label="close sidebar"
+                       class="btn btn-square btn-soft rounded-lg">
+                    <i class="fas fa-arrow-right-from-bracket"></i>
+                </label>
+                <h3 class="text-2xl">Создать ссылку</h3>
+            </div>
+
+            @* <CreateLinkForm Loading="@Loading" OnSubmit="OnCreateLinkSubmit"></CreateLinkForm> *@
+        </div>
+    </div>
+</div>
+
+@code {
+    private int _page = 1;
+    private int _perPage = 10;
+    private string? _searchTerm;
+    private List<ShortLinkDto>? _links = null;
+    private CancellationTokenSource? _searchTokenSource;
+
+    [CascadingParameter] private Profile? Profile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadLinks();
+    }
+
+    private async Task LoadLinks()
+    {
+        _links = await ShortLinkService.GetLinksAsync(_page, _perPage, Profile?.Id ?? "", _searchTerm);
+        StateHasChanged();
+    }
+
+    private async Task OnSearchInput(ChangeEventArgs e)
+    {
+        _searchTerm = e.Value?.ToString();
+        if (_searchTerm is { Length: < 3, Length: > 0}) return;
+
+        // Cancel previous search if it's still running
+        if (_searchTokenSource != null)
+        {
+            await _searchTokenSource.CancelAsync();
+        }
+        _searchTokenSource = new CancellationTokenSource();
+
+        // Add a small delay before searching to avoid too many requests
+        await Task.Delay(300, _searchTokenSource.Token)
+            .ContinueWith(async _ =>
+            {
+                if (!_searchTokenSource.IsCancellationRequested)
+                {
+                    await InvokeAsync(LoadLinks);
+                }
+            }, _searchTokenSource.Token);
+    }
+
+    private async Task OnSearchEnter(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await LoadLinks();
+    }
+
+}

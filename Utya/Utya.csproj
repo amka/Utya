@@ -77,4 +77,8 @@
       <AdditionalFiles Include="Components\Dashboard\_Imports.razor" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Models\" />
+    </ItemGroup>
+
 </Project>
