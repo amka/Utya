@@ -84,16 +84,25 @@ public class ShortLinkService(
         };
     }
 
-    public async Task<List<ShortLinkDto>> GetLinksAsync(int page, int perPage, string user)
+    public async Task<List<ShortLinkDto>> GetLinksAsync(int page, int perPage, string user, string? search = null)
     {
-        var links = await context.ShortLinks
+        var query = context.ShortLinks
             .AsNoTracking()
-            .Where(l => l.UserId == user)
+            .Where(l => l.UserId == user);
+            
+        if (!string.IsNullOrWhiteSpace(search))
+        {
+            var searchTerm = search.ToLower();
+            query = query.Where(l => l.OriginalUrl.ToLower().Contains(searchTerm));
+        }
+            
+        var links = await query
             .OrderByDescending(l => l.CreatedAt)
             .Include(s => s.Clicks)
             .Skip((page - 1) * perPage)
             .Take(perPage)
             .ToListAsync();
+            
         return links.Select(l => new ShortLinkDto
         {
             Id = l.Id,

@@ -16,13 +16,19 @@ public class ShortLinkService(IHttpClientFactory clientFactory, ILogger<ShortLin
         throw new NotImplementedException();
     }
 
-    public async Task<List<ShortLinkDto>> GetLinksAsync(int page, int perPage, string? user)
+    public async Task<List<ShortLinkDto>> GetLinksAsync(int page, int perPage, string? user, string? search = null)
     {
         try
         {
             var client = clientFactory.CreateClient("Utya.ServerAPI");
-            var items = await client.GetFromJsonAsync<List<ShortLinkDto>>(
-                $"api/v1/links?page={page}&perPage={perPage}");
+            var url = $"api/v1/links?page={page}&perPage={perPage}";
+            
+            if (!string.IsNullOrWhiteSpace(search))
+            {
+                url += $"&search={Uri.EscapeDataString(search)}";
+            }
+            
+            var items = await client.GetFromJsonAsync<List<ShortLinkDto>>(url);
             return items ?? [];
         }
         catch (Exception e)

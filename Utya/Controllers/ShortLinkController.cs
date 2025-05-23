@@ -101,7 +101,7 @@ public class ShortLinkController(
 
         if (user == null) return Unauthorized();
 
-        var links = await shortLinkService.GetLinksAsync(page, perPage, user.Id);
+        var links = await shortLinkService.GetLinksAsync(page, perPage, user.Id, search);
         return Ok(links);
     }
 }
