@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -28,5 +29,12 @@ public class AccountController(
 
 
         return Ok(await userService.GetProfileAsync(user.Id));
+    }
+
+    [HttpGet("/Logout")]
+    public async Task Logout([FromQuery] string returnUrl = "/")
+    {
+        await HttpContext.SignOutAsync(IdentityConstants.ApplicationScheme);
+        HttpContext.Response.Redirect(returnUrl);
     }
 }

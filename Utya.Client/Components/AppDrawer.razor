@@ -41,8 +41,8 @@
                 <div tabindex="0" role="button" class="btn btn-soft btn-block justify-start avatar">
                     <div class="w-6 rounded-full">
                         <img width="36" height="36"
-                            alt="Tailwind CSS Navbar component"
-                            src="@Profile?.GravatarUrl?s=36"/>
+                             alt="Tailwind CSS Navbar component"
+                             src="@Profile?.GravatarUrl?s=36"/>
                     </div>
                     <span class="font-bold truncate">@Profile?.UserName</span>
                 </div>
@@ -55,13 +55,9 @@
                         </a>
                     </li>
                     <li>
-                        <form action="Account/Logout" method="post">
-                            <AntiforgeryToken/>
-                            <input type="hidden" name="ReturnUrl" value="/App"/>
-                            <button type="submit" class="rounded-lg cursor-pointer">
-                                Выйти
-                            </button>
-                        </form>
+                        <NavLink href="/Logout" class="rounded-lg cursor-pointer">
+                            Выйти
+                        </NavLink>
                     </li>
                 </ul>
             </div>
