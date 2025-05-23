@@ -1,4 +1,4 @@
-namespace Utya.Services;
+namespace Utya.Shared.Models;
 
 public class LimitStatus
 {

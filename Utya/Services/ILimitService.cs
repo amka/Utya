@@ -1,4 +1,5 @@
 using Utya.Data;
+using Utya.Shared.Models;
 
 namespace Utya.Services;
 

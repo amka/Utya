@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Utya.Data;
+using Utya.Shared.Models;
 
 namespace Utya.Services;
 
@@ -39,9 +40,16 @@ public class LimitService : ILimitService
         };
     }
 
-    public Task TrackLinkCreation(string userId)
+    public async Task TrackLinkCreation(string userId)
     {
-        throw new NotImplementedException();
+        var userPlan = await _context.UserPlans
+            .FirstOrDefaultAsync(up => up.ApplicationUserId == userId && up.IsActive);
+
+        if (userPlan != null)
+        {
+            userPlan.LinksUsed++;
+            await _context.SaveChangesAsync();
+        }
     }
 
     private async Task<Plan> GetCurrentPlanAsync(string userId)

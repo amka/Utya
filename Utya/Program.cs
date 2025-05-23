@@ -2,11 +2,11 @@ using Blazored.Toast;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Utya.Client.Pages;
 using Utya.Components;
 using Utya.Components.Account;
 using Utya.Data;
 using Utya.Services;
+using Utya.Shared.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +46,7 @@ builder.Services.AddHttpClient<GeoIpService>(client =>
 
 builder.Services.AddScoped<ShortLinkService>();
 builder.Services.AddScoped<ILimitService, LimitService>();
+builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IGeoLocator, GeoIpService>();
 builder.Services.AddSingleton<IPasswordHasher<ShortLink>, PasswordHasher<ShortLink>>();
 builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();

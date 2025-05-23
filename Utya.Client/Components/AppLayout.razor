@@ -1,0 +1,73 @@
+@inherits LayoutComponentBase
+
+@inject IUserService UserService
+
+<div class="drawer lg:drawer-open">
+    <input id="my-drawer-2" type="checkbox" class="drawer-toggle"/>
+    <div class="drawer-content flex flex-col items-center justify-center">
+        @Body
+        <!-- Page content here -->
+        <label for="my-drawer-2" class="btn btn-primary drawer-button lg:hidden">
+            Open drawer
+        </label>
+    </div>
+    <div class="drawer-side overflow-y-hidden">
+        <label for="my-drawer-2" aria-label="close sidebar" class="drawer-overlay"></label>
+        <div class="bg-base-300 text-base-content min-h-full w-60 flex flex-col">
+            <NavLink class="text-2xl font-bold text-gradient active flex flex-row flex-nowrap items-center flex-shrink"
+                     href="App"
+                     Match="NavLinkMatch.All">
+                <span class="w-10 h-10 rounded-full flex items-center justify-center mr-3">
+                    <i class="text-xl">🪿</i>
+                </span>
+                Utya App
+            </NavLink>
+
+        
+        <ul class="menu flex-col w-full">
+            <li>
+                <NavLink href="App" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+                    <i class="fas fa-chart-simple"></i>
+                    Статистика
+                </NavLink>
+            </li>
+            <li>
+                <NavLink href="App/Links" ActiveClass="menu-active" Match="NavLinkMatch.All" class="rounded-lg">
+                    <i class="fas fa-link"></i>
+                    Ссылки
+                </NavLink>
+            </li>
+        </ul>
+
+
+        <div class="flex flex-grow"></div>
+
+        <LimitsCard Limits="@Profile?.Limits" />
+        </div>
+    </div>
+</div>
+
+@code {
+
+    [CascadingParameter] private Task<AuthenticationState> authState { get; set; }
+
+    private bool _isLoading = true;
+    private Profile? Profile { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        _isLoading = true;
+        await Task.Delay(1);
+
+        try
+        {
+            var userId = await UserService.GetCurrentUserId();
+            if (userId == null) return;
+            Profile = await UserService.GetProfileAsync(userId);
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+}

@@ -13,7 +13,8 @@ public class ShortLinkService(
     IPasswordHasher<ShortLink> hasher,
     IGeoLocator geoLocator,
     ILogger<ShortLinkService> logger,
-    UserManager<ApplicationUser> userManager)
+    UserManager<ApplicationUser> userManager,
+    ILimitService limitService)
 {
     public async Task<ShortLink> CreateShortLinkAsync(
         CreateShortLinkRequest request,
@@ -27,6 +28,12 @@ public class ShortLinkService(
             }
 
             // request.CustomAlias = request.CustomAlias.ToLowerInvariant();
+        }
+
+        // Check if user can create more links
+        if (user != null && !await limitService.CanCreateLinkAsync(user.Id))
+        {
+            throw new InvalidOperationException("Вы достигли лимита по количеству ссылок для вашего тарифного плана");
         }
 
         var shortLink = new ShortLink
@@ -46,6 +53,12 @@ public class ShortLinkService(
 
         await context.ShortLinks.AddAsync(shortLink);
         await context.SaveChangesAsync();
+
+        // Track link creation for the user
+        if (user != null)
+        {
+            await limitService.TrackLinkCreation(user.Id);
+        }
 
         return shortLink;
     }
