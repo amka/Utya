@@ -9,24 +9,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.2" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="9.0.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Authentication" Version="9.0.5" />
+    <PackageReference Include="Microsoft.Extensions.Http" Version="9.0.5" />
     <PackageReference Include="QRCoder" Version="1.6.0" />
   </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Pages\Dashboard\CreateLinkForm.razor" />
-    <_ContentIncludedByDefault Remove="Pages\Dashboard\Links.razor" />
-  </ItemGroup>
-
+  
   <ItemGroup>
     <ProjectReference Include="..\Utya.Shared\Utya.Shared.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Microsoft.Extensions.Http">
-      <HintPath>..\..\..\..\..\..\usr\lib64\dotnet\shared\Microsoft.AspNetCore.App\9.0.4\Microsoft.Extensions.Http.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 </Project>
