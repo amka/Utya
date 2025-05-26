@@ -52,8 +52,19 @@
 
 #### 4. Запустить миграции
 
-    dotnet ef --project Utya database migrate
+    dotnet ef --project Utya database update
 
 #### 5. Запустить сервер
 
     dotnet run --project Utya
+
+### Для работы над клиентской частью может потребоваться
+
+#### 6. Установить зависимости
+
+    cd Utya.Client
+    bun install
+
+#### 7. Запустить сервер
+
+    bunx @tailwindcss/cli -i ../Utya/wwwroot/app.css -o ../Utya/wwwroot/bundle.css --watch
