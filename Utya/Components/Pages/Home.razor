@@ -142,22 +142,22 @@
                 вам эффективно управлять вашими ссылками</p>
         </div>
 
-        
+
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        @foreach (var feature in _features)
-        {
-            <div class="card hover:shadow-lg bg-base-200 text-base-content p-2 rounded-2xl transition duration-300">
-                <div class="card-body">
-                    <div class="card-title mb-6">
-                        <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
-                            <i class="fas @feature.Icon text-primary/60 text-xl"></i>
+            @foreach (var feature in _features)
+            {
+                <div class="card hover:shadow-lg bg-base-200 text-base-content p-2 rounded-2xl transition duration-300">
+                    <div class="card-body">
+                        <div class="card-title mb-6">
+                            <div class="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center">
+                                <i class="fas @feature.Icon text-primary/60 text-3xl text-gradient "></i>
+                            </div>
+                            <h3 class="text-2xl">@feature.Title</h3>
                         </div>
-                        <h3>@feature.Title</h3>
+                        <p class="text-lg text-gray-600 dark:text-gray-300">@feature.Description</p>
                     </div>
-                    <p class="text-lg text-gray-600 dark:text-gray-300">@feature.Description</p>
                 </div>
-            </div>
-        }
+            }
         </div>
     </div>
 </section>
@@ -489,7 +489,8 @@
 
     private record Feature(string Title, string Icon, string Description);
 
-    private readonly List<Feature> _features = [
+    private readonly List<Feature> _features =
+    [
         new Feature("Молниеносная скорость", "fa-rocket", "Наши серверы работают настолько быстро, что даже гусь позавидует. Создавайте ссылки за доли секунды."),
         new Feature("Защита ссылок", "fa-lock", "Защитите свои ссылки паролем, установите срок действия или ограничьте количество переходов."),
         new Feature("Детальная аналитика", "fa-chart-pie", "Получайте подробные отчеты о кликах, географии переходов, устройствах и браузерах ваших посетителей."),
@@ -518,7 +519,7 @@
 
     private async Task OnSubmit()
     {
-        Logger.LogInformation("Id = {Id}", Model?.Url);
+        Logger.LogInformation("URL = {}", Model?.Url);
         try
         {
             Loading = true;
@@ -529,6 +530,10 @@
                 ResultModel = await response.Content.ReadFromJsonAsync<CreateShortLinkResponse>();
             }
         }
+        catch (Exception err)
+        {
+            Logger.LogError("{}", err.Message);
+        } 
         finally
         {
             Loading = false;
