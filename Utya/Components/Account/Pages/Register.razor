@@ -89,16 +89,6 @@
     {
         var user = CreateUser();
 
-        var userPlan = new UserPlan()
-        {
-            Plan = await LimitService.GetDefaultPlanAsync(),
-            User = user,
-            IsActive = true,
-            ValidUntil = DateTime.UtcNow.Date + TimeSpan.FromDays(30),
-        };
-
-        await LimitService.AddUserPlanAsync(userPlan);
-
         await UserStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
         var emailStore = GetEmailStore();
         await emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -111,6 +101,19 @@
         }
 
         Logger.LogInformation("User created a new account with password.");
+        
+        // Create default plan
+        var userPlan = new UserPlan
+        {
+            Plan = await LimitService.GetDefaultPlanAsync(),
+            User = user,
+            IsActive = true,
+            ValidUntil = DateTime.UtcNow.Date + TimeSpan.FromDays(30),
+        };
+
+        await LimitService.AddUserPlanAsync(userPlan);
+        
+        Logger.LogInformation("Plan {} added to the User {}", userPlan.Plan, userPlan.User.Id);
 
         var userId = await UserManager.GetUserIdAsync(user);
         var code = await UserManager.GenerateEmailConfirmationTokenAsync(user);
