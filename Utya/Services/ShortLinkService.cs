@@ -64,7 +64,7 @@ public class ShortLinkService(
         return shortLink;
     }
 
-    public Task<ShortLinkDto> CreateShortLinkAsync(CreateShortLinkRequest request, string userId)
+    public Task<ShortLinkDto> CreateShortLinkAsync(CreateShortLinkRequest request, string? userId)
     {
         throw new NotImplementedException();
     }

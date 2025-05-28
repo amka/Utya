@@ -6,7 +6,7 @@ namespace Utya.Client.Services;
 
 public class ShortLinkService(IHttpClientFactory clientFactory, ILogger<ShortLinkService> logger) : IShortLinkService
 {
-    public Task<ShortLinkDto> CreateShortLinkAsync(CreateShortLinkRequest request, string userId)
+    public Task<ShortLinkDto> CreateShortLinkAsync(CreateShortLinkRequest request, string? userId)
     {
         throw new NotImplementedException();
     }

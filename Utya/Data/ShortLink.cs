@@ -29,7 +29,7 @@ public class ShortLink
     public bool IsActive { get; set; } = true;
 
     // Foreign keys
-    public string UserId { get; set; }
+    public string? UserId { get; set; }
     public ApplicationUser? User { get; set; }
 
     // Navigation properties

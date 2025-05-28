@@ -40,10 +40,8 @@ public class ShortLinkController(
                 ? await userManager.GetUserAsync(User)
                 : null;
 
-            if (user == null) return Unauthorized();
-
-
-            var shortLink = await shortLinkService.CreateShortLinkAsync(request, user.Id);
+            var service = shortLinkService as ShortLinkService;
+            var shortLink = await service!.CreateShortLinkAsync(request, user);
 
             var baseUrl = $"{Request.Scheme}://{Request.Host}";
             var response = new CreateShortLinkResponse(
