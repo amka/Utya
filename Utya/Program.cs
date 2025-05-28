@@ -49,7 +49,7 @@ builder.Services.AddScoped<ILimitService, LimitService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<IGeoLocator, GeoIpService>();
 builder.Services.AddSingleton<IPasswordHasher<ShortLink>, PasswordHasher<ShortLink>>();
-builder.Services.AddSingleton<IEmailSender<ApplicationUser>, IdentityNoOpEmailSender>();
+builder.Services.AddSingleton<IEmailSender<ApplicationUser>, LogEmailSender>();
 builder.Services.AddSingleton<IClickProcessor, ClickProcessor>();
 builder.Services.AddHostedService(s => s.GetService<IClickProcessor>()!);
 
