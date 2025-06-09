@@ -1,4 +1,4 @@
-namespace Utya;
+namespace Utya.Shared.Models;
 
 public enum Expiration
 {

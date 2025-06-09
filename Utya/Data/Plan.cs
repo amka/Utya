@@ -1,3 +1,5 @@
+using Utya.Shared.Models;
+
 namespace Utya.Data;
 
 public class Plan

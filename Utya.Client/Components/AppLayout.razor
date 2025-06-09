@@ -1,9 +1,11 @@
 @inherits LayoutComponentBase
 
-@using Utya.Shared.Models
-@using Utya.Shared.Services
+@using Blazored.Toast.Configuration
 @using Microsoft.AspNetCore.Components.Sections
 @inject IUserService UserService
+
+<BlazoredToasts Position="ToastPosition.TopCenter" IconType="IconType.FontAwesome"
+                SuccessClass="text-success" ErrorClass="text-error"/>
 
 <div class="drawer lg:drawer-open">
     <input id="app-drawer" type="checkbox" class="drawer-toggle"/>

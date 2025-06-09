@@ -1,8 +1,11 @@
 @page "/App/Links"
+@using Blazored.Toast.Services
 @using Microsoft.AspNetCore.Components.Sections
 @rendermode InteractiveWebAssembly
 
-@inject IUserService UserService
+@inject ILogger<Links> Logger
+@inject IJSRuntime JsRuntime
+@inject IToastService ToastService
 @inject IShortLinkService ShortLinkService
 
 @attribute [StreamRendering]
@@ -26,19 +29,19 @@
         <div class="flex flex-col">
             <div class="p-4">
                 <div class="mb-4 sticky top-0">
-                        <div class="gap-2">
-                            <input
-                                type="text"
-                                placeholder="Поиск по URL..."
-                                class="input w-100 rounded-lg"
-                                @bind="_searchTerm"
-                                @oninput="OnSearchInput"
-                                @onkeyup="OnSearchEnter"
-                            />
-                            <button class="btn btn-square rounded-lg" @onclick="LoadLinks">
-                                <i class="fas fa-search"></i>
-                            </button>
-                        </div>
+                    <div class="gap-2">
+                        <input
+                            type="text"
+                            placeholder="Поиск по URL..."
+                            class="input w-100 rounded-lg"
+                            @bind="_searchTerm"
+                            @oninput="OnSearchInput"
+                            @onkeyup="OnSearchEnter"
+                        />
+                        <button class="btn btn-square rounded-lg" @onclick="LoadLinks">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </div>
                 </div>
 
                 @if (_links == null)
@@ -74,17 +77,25 @@
                 <h3 class="text-2xl">Создать ссылку</h3>
             </div>
 
-            @* <CreateLinkForm Loading="@Loading" OnSubmit="OnCreateLinkSubmit"></CreateLinkForm> *@
+            <EditLinkForm Loading="@_loading" OnSave="OnSave" OnCancel="OnCancel"></EditLinkForm>
         </div>
     </div>
 </div>
+
+<script>
+    function closeCreateForm() {
+        document.getElementById('create-form-label').click();
+    }
+</script>
+
 
 @code {
     private int _page = 1;
     private int _perPage = 10;
     private string? _searchTerm;
-    private List<ShortLinkDto>? _links = null;
+    private List<ShortLinkDto>? _links;
     private CancellationTokenSource? _searchTokenSource;
+    private bool _loading = false;
 
     [CascadingParameter] private Profile? Profile { get; set; }
 
@@ -102,13 +113,14 @@
     private async Task OnSearchInput(ChangeEventArgs e)
     {
         _searchTerm = e.Value?.ToString();
-        if (_searchTerm is { Length: < 3, Length: > 0}) return;
+        if (_searchTerm is { Length: < 3, Length: > 0 }) return;
 
         // Cancel previous search if it's still running
         if (_searchTokenSource != null)
         {
             await _searchTokenSource.CancelAsync();
         }
+
         _searchTokenSource = new CancellationTokenSource();
 
         // Add a small delay before searching to avoid too many requests
@@ -125,6 +137,35 @@
     private async Task OnSearchEnter(KeyboardEventArgs e)
     {
         if (e.Key == "Enter") await LoadLinks();
+    }
+
+    private async Task OnSave(ShortLinkDto link)
+    {
+        Logger.LogInformation("OnSave");
+        _loading = true;
+        await Task.Delay(1);
+        try
+        {
+            var linkRequest = new CreateShortLinkRequest(link.OriginalUrl)
+            {
+                CustomAlias = link.CustomAlias,
+                Password = link.Password,
+                ExpiresAt = link.ExpiresAt
+            };
+            await ShortLinkService.CreateShortLinkAsync(linkRequest, Profile?.Id);
+            await JsRuntime.InvokeVoidAsync("closeCreateForm");
+            ToastService.ShowSuccess("Ссылка создана");
+            
+            await LoadLinks();
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+
+    private void OnCancel()
+    {
     }
 
 }

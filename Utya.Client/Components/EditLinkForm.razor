@@ -1,17 +1,15 @@
-@using Utya.Shared.Models
-@rendermode InteractiveServer
-
+@using Utya.Client.Pages
 <EditForm Enhance="true" Model="@Model" class="flex flex-col flex-grow px-4"
           OnValidSubmit="_OnSubmit"
           FormName="CreateLinkForm">
 
     <DataAnnotationsValidator/>
     <ValidationSummary class="text-warning" role="alert"/>
-
+    
     <fieldset class="fieldset">
         <legend class="fieldset-legend">URL</legend>
-        <InputText class="input w-full rounded-lg" @bind-Value="Model!.Url" autofocus disabled="@Loading"/>
-        <ValidationMessage For="() => Model!.Url" class="text-warning"/>
+        <InputText class="input w-full rounded-lg" @bind-Value="Model!.OriginalUrl" autofocus disabled="@Loading"/>
+        <ValidationMessage For="() => Model!.OriginalUrl" class="text-warning"/>
     </fieldset>
 
     <fieldset class="fieldset">
@@ -30,46 +28,58 @@
         <legend class="fieldset-legend">Expiration</legend>
         <InputSelect @bind-Value="Model!.Expiration" class="select w-full rounded-lg bg-base-100 text-base-content"
                      disabled="@Loading">
-            <option value="@Expiration.Never">Никогда</option>
-            <option value="@Expiration.SixHours">6 часов</option>
-            <option value="@Expiration.OneDay">1 день</option>
-            <option value="@Expiration.OneWeek">1 неделя</option>
-            <option value="@Expiration.OneMonth">1 месяц</option>
-            <option value="@Expiration.SixMonths">6 месяцев</option>
-            <option value="@Expiration.OneYear">1 год</option>
+            <option value="@Innie.Expiration.Never">Никогда</option>
+            <option value="@Innie.Expiration.SixHours">6 часов</option>
+            <option value="@Innie.Expiration.OneDay">1 день</option>
+            <option value="@Innie.Expiration.OneWeek">1 неделя</option>
+            <option value="@Innie.Expiration.OneMonth">1 месяц</option>
+            <option value="@Innie.Expiration.SixMonths">6 месяцев</option>
+            <option value="@Innie.Expiration.OneYear">1 год</option>
         </InputSelect>
         <ValidationMessage For="() => Model!.Expiration"/>
     </fieldset>
-
+    
     <div class="flex flex-grow"></div>
 
-    <div class="my-4 flex justify-end">
+    <div class="my-4 flex justify-between">
+        <button onclick="@_OnCancel" class="btn rounded-lg" disabled="@Loading">
+            Отмена
+        </button>
+        
         @if (Loading)
         {
-            <span class="loading loading-spinner"></span>
+            <div class="flex flex-grow"></div>
+            <div class="mx-2">
+                <span class="loading loading-spinner"></span>
+            </div>
         }
         <button type="submit" class="btn btn-primary rounded-lg" disabled="@Loading">
             <i class="fas fa-plus"></i>
-            Создать ссылку
+            Сохранить
         </button>
     </div>
 </EditForm>
 
 @code {
-    [SupplyParameterFromForm] private Links.ShortLinkFormModel? Model { get; set; }
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public EventCallback<ShortLinkDto> OnSave { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
 
-    [Parameter] public bool Loading { get; set; } = false;
-    [Parameter] public EventCallback<Links.ShortLinkFormModel> OnSubmit { get; set; }
+    [SupplyParameterFromForm] private ShortLinkDto? Model { get; set; }
 
     protected override void OnInitialized()
     {
-        Model = new Links.ShortLinkFormModel();
+        Model = new ShortLinkDto();
     }
 
-    private async Task _OnSubmit()
+    private void _OnSubmit(EditContext context)
     {
-        Console.WriteLine("Pick me!");
-        await OnSubmit.InvokeAsync(Model);
-        Model = new Links.ShortLinkFormModel();
+        OnSave.InvokeAsync(Model!);
     }
+
+    private void _OnCancel()
+    {
+        OnCancel.InvokeAsync();
+    }
+
 }

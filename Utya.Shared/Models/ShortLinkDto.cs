@@ -8,7 +8,7 @@ public class ShortLinkDto
 
     [Required] [Url] [MaxLength(2000)] public string OriginalUrl { get; set; } = null!;
 
-    [Required] [MaxLength(10)] public string ShortCode { get; set; } = null!;
+    [MaxLength(10)] public string ShortCode { get; set; } = null!;
 
     [MaxLength(50)] public string? CustomAlias { get; set; }
 
@@ -26,4 +26,8 @@ public class ShortLinkDto
     // public List<GeoRedirect> GeoRedirects { get; } = new();
 
     public bool IsExpired => ExpiresAt < DateTime.UtcNow;
+    
+    public string? Password { get; set; }
+
+    public Expiration? Expiration { get; set; }
 }

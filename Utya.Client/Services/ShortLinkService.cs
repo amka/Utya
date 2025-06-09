@@ -6,9 +6,20 @@ namespace Utya.Client.Services;
 
 public class ShortLinkService(IHttpClientFactory clientFactory, ILogger<ShortLinkService> logger) : IShortLinkService
 {
-    public Task<ShortLinkDto> CreateShortLinkAsync(CreateShortLinkRequest request, string? userId)
+    public async Task<ShortLinkDto> CreateShortLinkAsync(CreateShortLinkRequest request, string? userId)
     {
-        throw new NotImplementedException();
+        logger.LogInformation("Creating new ShortLink");
+        
+        var client = clientFactory.CreateClient("Utya.ServerAPI");
+        var response = await client.PostAsJsonAsync<CreateShortLinkRequest>("api/v1/links", request);
+        
+        logger.LogInformation("Response: {Response}", response);
+        
+        if (!response.IsSuccessStatusCode) throw new Exception("Failed to create ShortLink");
+        
+        var result = await response.Content.ReadFromJsonAsync<ShortLinkDto>();
+        return result ?? throw new Exception("Failed to create ShortLink");
+
     }
 
     public Task<ShortLinkDto?> GetLinkAsync(Guid id)
